@@ -24,6 +24,7 @@
     "eslint": "^9",
     "eslint-config-next": "^16",
     "puppeteer-core": "^24",
+    "sharp": "^0.35.4",
     "typescript": "^5"
   }
 }
