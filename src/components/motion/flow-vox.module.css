@@ -1,0 +1,58 @@
+/* C1: FlowVox reveal (y 60px -> 0, fade, 600ms easeOutCubic, stagger 300ms) */
+.flowVox > * {
+  opacity: 0;
+  transform: translateY(60px);
+  transition:
+    transform var(--dur-reveal) var(--ease-out-cubic),
+    opacity var(--dur-reveal) var(--ease-out-cubic);
+  will-change: transform, opacity;
+}
+
+.began > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.finished > * {
+  will-change: auto;
+}
+
+.began > :nth-child(2) {
+  transition-delay: calc(var(--stagger) * 1);
+}
+.began > :nth-child(3) {
+  transition-delay: calc(var(--stagger) * 2);
+}
+.began > :nth-child(4) {
+  transition-delay: calc(var(--stagger) * 3);
+}
+.began > :nth-child(5) {
+  transition-delay: calc(var(--stagger) * 4);
+}
+.began > :nth-child(6) {
+  transition-delay: calc(var(--stagger) * 5);
+}
+.began > :nth-child(7) {
+  transition-delay: calc(var(--stagger) * 6);
+}
+.began > :nth-child(8) {
+  transition-delay: calc(var(--stagger) * 7);
+}
+.began > :nth-child(9) {
+  transition-delay: calc(var(--stagger) * 8);
+}
+.began > :nth-child(10) {
+  transition-delay: calc(var(--stagger) * 9);
+}
+.began > :nth-child(11) {
+  transition-delay: calc(var(--stagger) * 10);
+}
+.began > :nth-child(12) {
+  transition-delay: calc(var(--stagger) * 11);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flowVox > * {
+    transition: none;
+  }
+}

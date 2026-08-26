@@ -1,0 +1,192 @@
+/* Footer (reference #siteFooter) + PAGE TOP (C4/E7) */
+.footer {
+  position: relative;
+  padding: 70px 0 30px;
+  background: var(--c-bg2);
+}
+
+.inner {
+  padding-inline: 40px;
+}
+
+/* PAGE TOP: 90px circle, top -30px right 30px */
+.pageTopVox {
+  position: absolute;
+  top: -30px;
+  right: 30px;
+  z-index: 10;
+  width: 90px;
+  height: 90px;
+}
+
+.pageTop {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: var(--c-white);
+  font-family: var(--font-en), sans-serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+  text-align: center;
+  transition: color 0.3s;
+}
+.pageTop::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--c-white);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s,
+    height 0.3s,
+    opacity 0.3s;
+}
+.pageTopLabel {
+  position: relative;
+  z-index: 2;
+  display: block;
+  padding-top: 2px;
+}
+@media (any-hover: hover) {
+  .pageTop:hover {
+    color: var(--c-primary);
+  }
+  .pageTop:hover::before {
+    width: 83%;
+    height: 83%;
+    opacity: 1;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.logo a {
+  display: flex;
+  flex-direction: column;
+  width: 125px;
+  color: var(--c-primary);
+}
+.logoJp {
+  font-size: 1.6rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+.logoEn {
+  margin-top: 4px;
+  font-family: var(--font-en), sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+}
+
+.snsList {
+  display: flex;
+  gap: 16px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--c-primary);
+}
+
+.bottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.fNav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+.fNav a {
+  transition: color 0.3s;
+}
+@media (any-hover: hover) {
+  .fNav a:hover {
+    color: var(--c-primary);
+  }
+}
+
+.schoolLink {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 6px 16px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--c-primary);
+  border: 1px solid var(--c-primary);
+  border-radius: 10em;
+  background: var(--c-white);
+}
+.schoolNote {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.copyright {
+  margin-top: 30px;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: gray;
+  text-align: right;
+}
+
+@media (max-width: 767px) {
+  .footer {
+    padding: 60px 0 24px;
+  }
+  .inner {
+    padding-inline: 20px;
+  }
+  .pageTopVox {
+    right: 20px;
+    width: 72px;
+    height: 72px;
+  }
+  .pageTop {
+    font-size: 1.1rem;
+  }
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .bottom {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .fNav ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+  }
+  .schoolLink {
+    align-self: stretch;
+    align-items: center;
+  }
+  .copyright {
+    text-align: center;
+  }
+}

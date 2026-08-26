@@ -1,0 +1,415 @@
+# GoalBuddy v2 state.yaml
+# Board truth lives here. goal.md is the editable charter; notes/ holds long receipts only.
+
+version: 2
+
+goal:
+  title: "霞ヶ浦高等学校同窓会 Webサイト(pasconet 超熟サイトのデザイン・アニメーション再現)"
+  slug: "kasumigaura-alumni-hp"
+  kind: specific # specific | open_ended | existing_plan | recovery | audit
+  tranche: "継続実行: 参照サイト調査 → 技術選定 → セクション単位の縦割り実装と検証を繰り返し、最終監査で完了条件を満たすまで進める"
+  status: done # active | blocked | done
+  intake:
+    original_request: "https://www.pasconet.co.jp/choujuku/ のデザインアニメーションを再現し、内容は霞ヶ浦高等学校同窓会用にして作成する"
+    interpreted_outcome: "参照サイトのデザイン・アニメーションを再現し、全コンテンツを霞ヶ浦高等学校同窓会向けに置き換えた Next.js サイトが test-1 配下でビルド・起動・目視確認できる"
+    input_shape: specific # vague | specific | existing_plan | recovery | audit
+    audience: "霞ヶ浦高等学校同窓会の会員・卒業生・学校関係者"
+    authority: requested # requested | approved | inferred | needs_approval | blocked
+    proof_type: demo # test | demo | artifact | metric | review | source_backed_answer | decision
+    completion_proof: "build 成功 + headless ブラウザでの PC/SP スクリーンショットで主要セクションとアニメーションの再現を確認 + 参照サイト固有名詞(pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン|supporter)の残存参照ゼロ"
+    likely_misfire: "見た目だけコピーしてアニメーションを省略する / アニメーションだけ再現して文言がパン商品のまま・プレースホルダのまま / 参照サイトの画像・フォントを無断流用する / 参照サイトを塾サイトと誤認して構成を組む(訂正済)"
+    blind_spots_considered:
+      - "参照サイトの使用ライブラリは Swiper + 自社 azlib(anime.js + IntersectionObserver) + GSAP ScrollTrigger(パララックス 1 箇所)。Lenis 等は不使用(T001 で確定)"
+      - "同窓会の実データ(役員名・会員数・行事・会費)は未提供。[要確認] プレースホルダで進め、docs/site-brief.md に差し替え一覧を残す"
+      - "【訂正済】参照サイトは塾ではなく Pasco 食パン『超熟』ブランドサイト。MV/バナー帯/Concept/History/Recipe(Swiper)/CM Gallery/Supporter's Club/フッターを同窓会向けに再マッピング(notes/T002-judge-decision.md content_plan)"
+      - "test-1 はホームディレクトリ全体が git ルート。git add はパス限定、破壊的 git 操作禁止"
+      - "このホストでは Bash ヒアドキュメントに日本語を含めると失敗する。ファイル作成は Write/Edit ツールで行う"
+    existing_plan_facts: []
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  # installed | bundled_not_installed | missing | unknown
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  # none | local | github_projects | both | unknown
+  selected: local
+  local:
+    status: live # not_requested | starting | live | generated | blocked
+    url: "http://goalbuddy.localhost:41737/kasumigaura-alumni-hp/"
+    command: "npx goalbuddy board docs/goals/kasumigaura-alumni-hp"
+  github_projects:
+    status: not_requested
+    url: null
+    command: "npx goalbuddy extend github-projects"
+    missing: []
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: default
+    objective: "参照サイト https://www.pasconet.co.jp/choujuku/ の構造・デザイン・アニメーション・使用技術を調査し、再現仕様(セクション一覧・配色・タイポ・各アニメーションの挙動)を notes にまとめる。"
+    inputs:
+      - "https://www.pasconet.co.jp/choujuku/ (curl で HTML/CSS/JS 取得 + Playwright で PC/SP 観察)"
+    constraints:
+      - "Read-only。参照サイトの画像・フォント・文章をダウンロードして保存しない。"
+    expected_output:
+      - "セクション構成 / デザイントークン / アニメーション仕様 / 使用ライブラリ / 同窓会向け再マッピング案"
+    receipt:
+      result: done
+      note: notes/T001-reference-site-analysis.md
+      summary: "参照は Pasco 超熟ブランドサイト(塾ではない→チャーター訂正済)。10 ブロック、アニメ 17 種(intro fade 500ms / hover 連動 MV 0.5s / flowVox y60→0 600ms easeOutCubic stagger 300ms / ScrollTrigger scrub パララックス 1 箇所 / Swiper 4 種)。#005099・#F5F3EC、Yu Gothic + Montserrat 600、767px。ローディング演出は無し。"
+      evidence:
+        - notes/T001-reference-site-analysis.md
+        - notes/T001-browser-observations.md
+        - notes/ref/ref-pc-hero.png
+        - notes/ref/ref-pc-full.jpg
+        - notes/ref/ref-sp-hero.jpg
+        - notes/ref/ref-sp-full.jpg
+      deviations:
+        - "Scout は Bash ヒアドキュメントで日本語 note を書けず(unexpected EOF)。本文を受領し PM が Write ツールで保存した。"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "T001 の調査結果を検証し、技術スタックと Worker パッケージ(T003/T004/T005)を allowed_files / verify / stop_if 付きで確定する。"
+    inputs:
+      - "T001 receipt / notes/T001-*.md / notes/ref/*"
+    constraints:
+      - "Do not implement."
+    expected_output:
+      - "Decision / Worker packages / content plan"
+    receipt:
+      result: done
+      decision: approved
+      full_outcome_complete: false
+      note: notes/T002-judge-decision.md
+      rationale: "T001 の証拠は整合。スタック確定(Next.js App Router + TS + global CSS/CSS Modules 1rem=10px + Swiper 11 + GSAP は History parallax のみ + IntersectionObserver リビール + next/font Montserrat 600 + システム Yu Gothic)。§8 未解決(パン形マスク→角丸 40px、SNS/YouTube/バナーはデータ駆動で省略可、SVG プレースホルダ、Noto 不使用)を解決。T003/T004/T005 は逐次実行(src/** が重複するため並列禁止)。"
+      parallel_safety: "T003, T004, T005 must run sequentially; no parallel Workers."
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: default
+    objective: "test-1 に Next.js App Router + TS プロジェクトを構築し、最初の縦割りスライスを実装する: デザイントークン/globals.css(1rem=10px)、layout + next/font Montserrat 600 + #wrapper intro fade 500ms、固定ヘッダー(is-mini 切替・メガメニュー・SP ハンバーガー E9)、ヒーロー(キャッチコピー + 6 カード hover/tap 切替 B1-B3、波形区切り)、SP ラインアップ Swiper B4、<FlowVox> リビール部品(IO, 600ms easeOutCubic, stagger 300ms)、<WaveDivider>、バナー Swiper D1、src/data/*.ts に content_plan の文言([要確認] 付き)、scripts/shots.mjs(puppeteer-core)。詳細は notes/T002-judge-decision.md の worker_packages.T003。"
+    inputs:
+      - "notes/T002-judge-decision.md (decisions / worker_packages.T003 / content_plan)"
+      - "notes/T001-reference-site-analysis.md (§2 tokens, §4 animations A1,B1-B4,C1,C3,D1,E1,E3,E4,E8,E9)"
+      - "notes/ref/ref-pc-hero.png, ref-sp-hero.jpg"
+    allowed_files:
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".npmrc"
+      - ".gitignore"
+      - "next.config.ts"
+      - "next-env.d.ts"
+      - "tsconfig.json"
+      - "eslint.config.mjs"
+      - "README.md"
+      - "src/**"
+      - "public/**"
+      - "scripts/shots.mjs"
+      - "shots/**"
+      - "docs/goals/kasumigaura-alumni-hp/notes/T003-*.md"
+    verify:
+      - "pnpm install"
+      - "pnpm build   # exit 0"
+      - "pnpm lint    # 0 errors"
+      - "node scripts/shots.mjs   # shots/pc-hero.png pc-hover-card3.png pc-mini-header.png sp-hero.png sp-nav-open.png"
+      - "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン' src public | wc -l   # 0"
+      - "grep -rn 'console.log' src | wc -l   # 0"
+      - "grep -rn 'Lorem\\|lorem' src | wc -l   # 0"
+    stop_if:
+      - "Need files outside allowed_files or any path outside C:/Users/s1598/test-1."
+      - "Behavior is ambiguous after reading notes/T001-* and T002 decision."
+      - "pnpm build or shots.mjs fails twice after root-cause fixes."
+      - "Any step would require rm -rf, git add ., git reset, or network resources beyond npm/Google Fonts."
+    receipt:
+      result: done
+      note: notes/T003-implementation.md
+      changed_files:
+        - package.json
+        - pnpm-lock.yaml
+        - .npmrc
+        - .gitignore
+        - next.config.ts
+        - tsconfig.json
+        - eslint.config.mjs
+        - src/app/layout.tsx
+        - src/app/page.tsx
+        - src/styles/globals.css
+        - src/data/site.ts
+        - src/data/nav.ts
+        - src/data/hero.ts
+        - src/data/banners.ts
+        - src/data/sections.ts
+        - src/hooks/use-is-sp.ts
+        - src/hooks/use-body-class.ts
+        - src/components/layout/header.tsx
+        - src/components/layout/global-nav.tsx
+        - src/components/layout/header-right.tsx
+        - src/components/layout/section-stubs.tsx
+        - src/components/hero/hero.tsx
+        - src/components/hero/hero-item.tsx
+        - src/components/hero/lineup.tsx
+        - src/components/hero/lineup-card.tsx
+        - src/components/hero/lineup-swiper.tsx
+        - src/components/motion/flow-vox.tsx
+        - src/components/motion/wave-divider.tsx
+        - src/components/banner/banner-section.tsx
+        - src/components/banner/banner-slider.tsx
+        - public/placeholder/hero-intro.svg
+        - public/icons/card-01.svg
+        - scripts/shots.mjs
+        - shots/pc-hero.png
+        - docs/goals/kasumigaura-alumni-hp/notes/T003-implementation.md
+      commands:
+        - cmd: "pnpm install"
+          status: pass
+        - cmd: "pnpm build"
+          status: pass
+        - cmd: "pnpm lint"
+          status: pass
+        - cmd: "node scripts/shots.mjs"
+          status: pass
+          note: "5 PNG + assertions(is-mini / SP scrollWidth 390 / is-navOpen)"
+        - cmd: "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン' src public | wc -l"
+          status: pass
+          output: "0"
+        - cmd: "grep -rn 'console.log' src | wc -l"
+          status: pass
+          output: "0"
+      summary: "Next.js 16.3 + React 19 + Swiper 11 + GSAP 3.15 で雛形〜ヘッダー(is-mini/メガメニュー/SP ハンバーガー)〜ヒーロー(6 カード hover 切替 B1-B3、波形)〜SP Swiper〜FlowVox〜バナー Swiper D1 を実装。PM が shots/pc-hero, pc-hover-card3, sp-hero を目視確認: 構成・配色・カード hover とも参照に忠実。"
+      deviations:
+        - "Hero .outline padding-bottom 170→320px(ボタンがカードと重なるため)"
+        - "SP ナビオーバーレイに backdrop-filter、SP メガメニューを 3 列コンパクト化"
+        - "波形の塗りは白でなく #F5F3EC(ref-pc-hero.png に一致)"
+        - "next.config.ts に turbopack.root を設定(ホーム直下 lockfile 警告対策)"
+      open_issues:
+        - "#about〜#contact は見出しのみのスタブ(T004 で実装)"
+        - "ヒーロー用プレースホルダ SVG 内の波形が下端 WaveDivider と視覚的に競合(T005 で調整)"
+  - id: T004
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: default
+    objective: "残り全セクション(About / History + GSAP scrub パララックス / News Swiper + カスタム scrollbar / Gallery + 円形ボタン + モーダル / CTA バナー / Contact / Footer + PAGETOP)を実装し、shots.mjs に全ページ・セクション別キャプチャを追加、残存語 grep ゼロを確認する。詳細は notes/T002-judge-decision.md の worker_packages.T004。"
+    inputs:
+      - "notes/T002-judge-decision.md (worker_packages.T004 / content_plan)"
+      - "notes/T001-reference-site-analysis.md (§4 C1,C2,C4,D2,D4,E1,E2,E5,E6,E7,E10)"
+      - "T003 receipt"
+    allowed_files:
+      - "src/**"
+      - "public/**"
+      - "scripts/shots.mjs"
+      - "shots/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "docs/goals/kasumigaura-alumni-hp/notes/T004-*.md"
+    verify:
+      - "pnpm build && pnpm lint"
+      - "node scripts/shots.mjs   # adds shots/pc-full.png sp-full.png pc-history.png pc-news.png pc-gallery-modal.png sp-footer.png"
+      - "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン|supporter' src public | wc -l   # 0"
+      - "grep -rn 'console.log' src | wc -l   # 0"
+      - "grep -rn 'Lorem\\|lorem' src | wc -l   # 0"
+      - "grep -c '要確認' src/data/*.ts   # >0"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Behavior is ambiguous (section order or copy not covered by content_plan)."
+      - "Verification fails twice after root-cause fixes."
+      - "GSAP scrub parallax cannot be made StrictMode-safe without removing ScrollTrigger (report instead of silently replacing)."
+    receipt:
+      result: done
+      note: notes/T004-implementation.md
+      changed_files:
+        - src/app/page.tsx
+        - src/styles/globals.css
+        - src/data/events.ts
+        - src/data/news.ts
+        - src/data/join.ts
+        - src/data/contact.ts
+        - src/data/footer.ts
+        - src/data/sections.ts
+        - src/data/site.ts
+        - src/components/sections/section-head.tsx
+        - src/components/sections/about-section.tsx
+        - src/components/sections/history-section.tsx
+        - src/components/sections/history-parallax.tsx
+        - src/components/sections/events-list.tsx
+        - src/components/sections/news-section.tsx
+        - src/components/sections/news-slider.tsx
+        - src/components/sections/gallery-section.tsx
+        - src/components/sections/gallery-trigger.tsx
+        - src/components/sections/gallery-modal.tsx
+        - src/components/sections/cta-card.tsx
+        - src/components/sections/join-section.tsx
+        - src/components/sections/join-slider.tsx
+        - src/components/sections/contact-section.tsx
+        - src/components/layout/site-footer.tsx
+        - src/components/layout/page-top-button.tsx
+        - src/components/layout/footer.module.css
+        - public/placeholder/about.svg
+        - scripts/shots.mjs
+        - shots/pc-full.png
+        - docs/goals/kasumigaura-alumni-hp/notes/T004-implementation.md
+      commands:
+        - cmd: "pnpm build"
+          status: pass
+        - cmd: "pnpm lint"
+          status: pass
+        - cmd: "node scripts/shots.mjs"
+          status: pass
+          note: "11 PNG + assertions(is-mini / SP scrollWidth 390 ×2 / is-navOpen / #popupContents)"
+        - cmd: "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン|supporter' src public | wc -l"
+          status: pass
+          output: "0"
+        - cmd: "grep -rn 'console.log' src | wc -l"
+          status: pass
+          output: "0"
+        - cmd: "grep -c '要確認' src/data/*.ts"
+          status: pass
+          output: "banners 4 / contact 6 / events 2 / hero 3 / join 2 / nav 1 / news 11 / sections 11 / site 3"
+      summary: "About/History(GSAP scrub パララックス + 年間行事)/News(Swiper + カスタム scrollbar)/Gallery(円形ボタン + フェードモーダル)/Join CTA(SP Swiper D4)/Contact/Footer(PAGE TOP E7)を実装・配線。PM が pc-full / pc-history / pc-news / pc-gallery-modal / sp-full / sp-footer を目視確認。"
+      deviations:
+        - "Worker エージェントがセッション上限で中断(About〜Gallery まで作成済み)。Join / Contact / Footer / page.tsx / shots.mjs 拡張と検証は PM が allowed_files 内で引き継いで完了。"
+        - "撮影スクリプトが smooth scroll の移動途中を撮っていたため scrollBehavior を無効化して修正。"
+        - "History img03 と年間行事リストの重なりを .events margin-top 300px で解消。"
+      open_issues:
+        - "ヒーロー用プレースホルダ SVG の波と WaveDivider の競合、About(SP)の余白、History 見出し位置の微調整 → T005"
+  - id: T005
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: default
+    objective: "shots/pc-full.png・sp-full.png を notes/ref と比較し、レイアウト・余白(vw)・波形高さ・ヘッダー/hover/リビールのタイミング差分を修正。SP 390 で横はみ出しゼロ。docs/site-brief.md に目的・セクションマップ・[要確認] 差し替え一覧・フォント/素材差し替え・実行/検証コマンドを記載。詳細は notes/T002-judge-decision.md の worker_packages.T005。"
+    inputs:
+      - "notes/T002-judge-decision.md (worker_packages.T005)"
+      - "notes/ref/*.jpg, shots/*.png"
+      - "T004 receipt"
+    allowed_files:
+      - "src/**"
+      - "public/**"
+      - "scripts/shots.mjs"
+      - "shots/**"
+      - "docs/site-brief.md"
+      - "docs/goals/kasumigaura-alumni-hp/notes/T005-*.md"
+    verify:
+      - "pnpm build && pnpm lint"
+      - "node scripts/shots.mjs   # asserts SP scrollWidth === 390 and PC header .is-mini after scroll"
+      - "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン|supporter' src public | wc -l   # 0"
+      - "grep -c '要確認' docs/site-brief.md   # >= 10"
+      - "grep -rn 'console.log' src | wc -l   # 0"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Verification fails twice."
+      - "A fidelity gap needs reference assets or copyrighted material to close (record as accepted difference)."
+    receipt:
+      result: done
+      note: notes/T005-diff-and-brief.md
+      changed_files:
+        - scripts/shots.mjs
+        - src/components/sections/history.module.css
+        - public/placeholder/hero-intro.svg
+        - docs/site-brief.md
+        - shots/pc-full.png
+        - shots/sp-full.png
+        - docs/goals/kasumigaura-alumni-hp/notes/T005-diff-and-brief.md
+      commands:
+        - cmd: "pnpm build"
+          status: pass
+        - cmd: "pnpm lint"
+          status: pass
+        - cmd: "node scripts/shots.mjs"
+          status: pass
+          note: "11 PNG、SP scrollWidth 390 ×2 / is-mini / is-navOpen / #popupContents アサーション通過"
+        - cmd: "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン|supporter' src public | wc -l"
+          status: pass
+          output: "0"
+        - cmd: "grep -c '要確認' docs/site-brief.md"
+          status: pass
+          output: "16"
+        - cmd: "grep -rn 'console.log' src | wc -l"
+          status: pass
+          output: "0"
+      summary: "参照 PC/SP 全ページと比較し、撮影スクリプト(smooth scroll / hover 残り)、History 画像と行事リストの重なり、ヒーロー SVG の波競合を修正。docs/site-brief.md に目的・技術構成・セクションマップ・[要確認] 20 項目・差し替え手順・検証コマンド・既知差分を記載。PM が T005 を実施(Worker フォールバック)。"
+      deviations:
+        - "T005 は PM が直接実施(セッション上限によるサブエージェント中断リスク回避)。allowed_files 内のみ編集。"
+      accepted_differences:
+        - "実写真・校章・ロゴ・動画は未提供のため自作 SVG プレースホルダ"
+        - "食パン形マスク / パン形ボタンは角丸 40px / 円形に置換"
+        - "年間行事・お問い合わせを追加したため全高は参照より長い(PC 7,555px vs 5,552px)"
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "完了条件(build 成功 / PC・SP スクリーンショットでのアニメーション再現 / 固有名詞残存ゼロ / 全文言が同窓会向け)を受領証と実出力に照らして監査する。"
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if the broader original outcome still has safe local follow-up slices."
+      - "Reject stopping only because a slice needs owner input (実データ)."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt:
+      result: done
+      decision: complete
+      full_outcome_complete: true
+      rationale: "Judge が完了条件コマンドを再実行(build exit 0 / lint 0 / shots.mjs 11 PNG + 全アサーション通過 / 残存語 0 / console.log 0 / lorem 0 / pasconet 0 / 塾 0)。参照 PC/SP 全ページと実装を目視照合し、10 ブロック構成・波形リズム・#005099/#F5F3EC・各セクションの対応を確認。17 種のアニメーションをソースで数値まで確認。全文言が同窓会向けで実在情報はすべて [要確認]。public/ は自作 SVG 45 点のみ。likely_misfire 4 条件いずれも非該当。"
+      evidence:
+        - "pnpm build / pnpm lint / node scripts/shots.mjs / grep 群の実出力(notes/T005-diff-and-brief.md と一致)"
+        - "shots/pc-full.png vs notes/ref/ref-pc-full.jpg、shots/sp-full.png vs notes/ref/ref-sp-full.jpg ほか 9 枚"
+        - "src/components/** の A1/B1-B4/C1-C4/D1/D2/D4/E1-E10 実装値"
+        - "git status: test-1/ は未追跡(?? test-1/)、test-1 外に本作業由来の変更なし"
+      missing_evidence: []
+      accepted_differences:
+        - "実写真・校章・ロゴ・動画は未提供 → 自作 SVG / テキストロゴ"
+        - "食パン形マスク・パン形ボタン → 角丸 40px / 円形"
+        - "年間行事・お問い合わせ追加により全高は参照より長い"
+        - "SNS・企業ロゴはデータ未提供のため非表示 / テキストリンク(データ投入で自動表示)"
+      follow_ups_for_owner:
+        - "docs/site-brief.md §4 の [要確認] 20 項目(役員名・創立年・会員数・行事日程・会費・事務局連絡先・公式 URL・SNS・動画 ID・写真・校章)の実データ提供"
+        - "git 管理: `git add test-1` のようにパス限定でコミット(ホーム直下で git add . しない)"
+        - "下層ページは未作成(全ボタンはトップ内アンカー)。push / デプロイはユーザー確認後"
+
+checks:
+  dirty_fingerprint: unknown
+  last_verification:
+    result: pass
+    task: T999
+    commands:
+      - "pnpm build"
+      - "pnpm lint"
+      - "node scripts/shots.mjs"
+      - "grep -rniE 'pasco|パスコ|超熟|choujuku|敷島|食パン|レシピ|パン' src public | wc -l → 0"

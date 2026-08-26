@@ -1,0 +1,222 @@
+/* ------------------------------------------------------------------
+   #js-lineupList (absolute at hero bottom)
+------------------------------------------------------------------ */
+.lineup {
+  position: absolute;
+  z-index: 60;
+  left: 0;
+  right: 0;
+  bottom: 75px;
+  max-width: var(--w-container-m);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.list {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+.list .slide {
+  width: calc(16.6% - 8px);
+  max-width: 175px;
+}
+
+/* card ------------------------------------------------------------ */
+.card {
+  position: relative;
+  display: block;
+  height: 100%;
+  padding: 18px 10px 14px;
+  overflow: hidden;
+  background: var(--c-white);
+  border-radius: var(--radius-l);
+  color: var(--c-primary);
+  text-align: center;
+  transition: color 0.3s;
+}
+
+/* top-right ring + dot */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--c-primary);
+  border-radius: 50%;
+  transition:
+    top 0.3s,
+    border-color 0.3s;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  right: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  opacity: 0;
+  transform: scale(0);
+  transition:
+    transform 0.6s,
+    opacity 0.4s;
+}
+
+.cInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.3s;
+}
+/* B3: navy ellipse rising from the bottom */
+.cInner::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: 0;
+  width: 440px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  opacity: 0;
+  transform: translate(-50%, 100%);
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+}
+
+.icon {
+  display: block;
+  width: 120px;
+  height: 120px;
+}
+.icon img {
+  width: 100%;
+  height: 100%;
+}
+.name {
+  display: block;
+  min-height: calc(1.4rem * 1.5 * 2);
+  font-size: 1.4rem;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.card.isActive,
+.card:hover {
+  color: var(--c-white);
+}
+.card.isActive .cInner,
+.card:hover .cInner {
+  transform: translateY(-10px);
+}
+.card.isActive .cInner::before,
+.card:hover .cInner::before {
+  opacity: 1;
+  transform: translate(-50%, 50%);
+}
+.card.isActive::before,
+.card:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+.card.isActive::after,
+.card:hover::after {
+  top: 5px;
+}
+
+/* ------------------------------------------------------------------
+   SP: Swiper (B4)
+------------------------------------------------------------------ */
+.lineupSp {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .lineupPc {
+    display: none;
+  }
+  .lineupSp {
+    display: block;
+    bottom: 45px;
+    padding: 0;
+  }
+  .swiperWrap {
+    position: relative;
+    padding: 0 28px;
+  }
+  .swiper {
+    overflow: hidden;
+  }
+  .swiper .slide {
+    width: 115px;
+    max-width: none;
+    height: auto;
+  }
+  .card {
+    padding: 12px 6px 10px;
+  }
+  .card::after {
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+  }
+  .card::before {
+    right: 10px;
+    width: 8px;
+    height: 8px;
+  }
+  .icon {
+    width: 72px;
+    height: 72px;
+  }
+  .name {
+    min-height: calc(1.1rem * 1.5 * 2);
+    font-size: 1.1rem;
+  }
+  .cInner::before {
+    width: 300px;
+    height: 100px;
+  }
+
+  .navBtn {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--c-primary);
+    transform: translateY(-50%);
+  }
+  .navBtn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-top: 2px solid var(--c-white);
+    border-right: 2px solid var(--c-white);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  .btnPrev {
+    left: 2px;
+  }
+  .btnPrev::before {
+    transform: translate(-30%, -50%) rotate(-135deg);
+  }
+  .btnNext {
+    right: 2px;
+  }
+}

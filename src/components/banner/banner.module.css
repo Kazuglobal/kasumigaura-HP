@@ -1,0 +1,82 @@
+/* ------------------------------------------------------------------
+   .bnrList (D1 banner Swiper)
+------------------------------------------------------------------ */
+.bnrList {
+  padding: 30px 0 120px;
+  background: var(--c-bg2);
+}
+
+.slider {
+  overflow: hidden;
+}
+
+.slide {
+  width: 650px;
+  height: auto;
+}
+
+.bnr {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  aspect-ratio: 650 / 250;
+  padding: 30px 50px;
+  border-radius: var(--radius-m);
+  color: var(--c-white);
+  overflow: hidden;
+}
+.bnr::after {
+  content: '';
+  position: absolute;
+  right: -40px;
+  bottom: -90px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.toneNavy {
+  background: linear-gradient(120deg, #003c74, var(--c-primary) 60%, var(--c-primary-l2));
+}
+.toneSky {
+  background: linear-gradient(120deg, var(--c-primary-l2), var(--c-primary-l1) 60%, var(--c-primary-l3));
+}
+.toneBeige {
+  background: linear-gradient(120deg, #b9a57c, var(--c-rail) 70%, var(--c-bg2));
+  color: var(--c-primary);
+}
+
+.bnrTitle {
+  font-size: 2.4rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+}
+.bnrSub {
+  margin-top: 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+  .bnrList {
+    padding: 20px 0 80px;
+  }
+  .slide {
+    width: auto;
+  }
+  .bnr {
+    padding: 20px 24px;
+  }
+  .bnrTitle {
+    font-size: 1.7rem;
+  }
+  .bnrSub {
+    font-size: 1.2rem;
+  }
+}

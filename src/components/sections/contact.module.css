@@ -1,0 +1,83 @@
+/* Contact: centered office card */
+.section {
+  position: relative;
+  margin-bottom: 12vw;
+  padding-inline: 40px;
+}
+
+.card {
+  max-width: 820px;
+  margin: 40px auto 0;
+  padding: 50px 60px;
+  border: 1px solid var(--c-primary-l3);
+  border-radius: var(--radius-l);
+  background: var(--c-white);
+  text-align: center;
+}
+
+.office {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  color: var(--c-primary);
+}
+
+.rows {
+  margin-top: 24px;
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: baseline;
+  text-align: left;
+}
+
+.label {
+  font-family: var(--font-en), sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.15em;
+  color: var(--c-primary);
+}
+
+.value {
+  font-size: 1.5rem;
+}
+
+.hours {
+  margin-top: 16px;
+  font-size: 1.3rem;
+}
+
+.btn {
+  margin-top: 30px;
+}
+
+.note {
+  margin-top: 14px;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #666;
+}
+
+@media (max-width: 767px) {
+  .section {
+    margin-bottom: 30vw;
+    padding-inline: 20px;
+  }
+  .card {
+    margin-top: 24px;
+    padding: 30px 20px;
+  }
+  .office {
+    font-size: 1.7rem;
+  }
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .value {
+    font-size: 1.4rem;
+  }
+}

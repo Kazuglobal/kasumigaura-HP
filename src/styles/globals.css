@@ -1,0 +1,428 @@
+/* ------------------------------------------------------------------
+   Design tokens (T002 decisions.tokens)
+------------------------------------------------------------------ */
+:root {
+  --c-primary: #005099;
+  --c-bg2: #f5f3ec;
+  --c-white: #fff;
+  --c-black: #000;
+  --c-primary-l1: #6696c2;
+  --c-primary-l2: #4c84b8;
+  --c-primary-l3: #b2cae0;
+  --c-rail: #e2d7bf;
+  --c-required: #e4050b;
+  --ov-white: rgba(255, 255, 255, 0.8);
+  --ov-head: rgba(47, 33, 11, 0.3);
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --dur-reveal: 600ms;
+  --stagger: 300ms;
+  --radius-s: 10px;
+  --radius-m: 15px;
+  --radius-l: 20px;
+  --radius-xl: 40px;
+  --font-body: 'Yu Gothic', '游ゴシック', YuGothic, '游ゴシック体', 'ヒラギノ角ゴ Pro W3', 'メイリオ', sans-serif;
+  --w-container-s: 1000px;
+  --w-container-m: 1100px;
+  --w-container-r: 1040px;
+  --w-container-l: 1200px;
+  --header-h: 110px;
+  --header-h-mini: 90px;
+  --logo-h: 120px;
+  --logo-h-mini: 90px;
+}
+
+/* ------------------------------------------------------------------
+   Reset / base
+------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 2;
+  font-feature-settings: 'palt';
+  color: var(--c-black);
+  background: var(--c-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 768px) {
+  body {
+    min-width: 1200px;
+  }
+}
+
+body.is-navOpen {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+figure {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------
+   A1: #wrapper intro fade (opacity 0 -> 1, 500ms linear)
+------------------------------------------------------------------ */
+@keyframes introFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#wrapper {
+  opacity: 0;
+  animation: introFade 500ms linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #wrapper {
+    animation-duration: 1ms;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Containers
+------------------------------------------------------------------ */
+.containerS,
+.containerM,
+.containerR,
+.containerL {
+  width: 100%;
+  margin-inline: auto;
+}
+.containerS {
+  max-width: var(--w-container-s);
+}
+.containerM {
+  max-width: var(--w-container-m);
+}
+.containerR {
+  max-width: var(--w-container-r);
+}
+.containerL {
+  max-width: var(--w-container-l);
+}
+
+/* ------------------------------------------------------------------
+   Typography parts
+------------------------------------------------------------------ */
+.enTitle {
+  font-family: var(--font-en), sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  color: var(--c-primary);
+  text-align: center;
+  line-height: 1.4;
+}
+.enTitle::after {
+  content: '';
+  display: block;
+  width: 116px;
+  height: 6px;
+  margin: 10px auto 0;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--c-primary) 0 30%,
+    var(--c-primary-l3) 30% 70%,
+    var(--c-primary) 70% 100%
+  );
+}
+.enTitle.isWhite,
+.enTitle.isWhite::after {
+  color: var(--c-white);
+}
+.enTitle.isWhite::after {
+  background: var(--c-white);
+}
+
+.headStyle01 {
+  font-size: 2.4rem;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  text-align: center;
+  line-height: 1.6;
+}
+@media (max-width: 767px) {
+  .headStyle01 {
+    font-size: 2rem;
+  }
+}
+
+.copyTxt {
+  font-size: 3rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+  color: var(--c-primary);
+}
+@media (max-width: 767px) {
+  .copyTxt {
+    font-size: 2.4rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   E1: .btnStyle01 pill button
+------------------------------------------------------------------ */
+.btnStyle01 {
+  display: inline-block;
+}
+.btnStyle01 a,
+.btnStyle01 button {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  min-width: 260px;
+  padding: 15px 55px;
+  font-size: 1.7rem;
+  font-weight: bold;
+  line-height: 1.5;
+  color: var(--c-white);
+  text-align: center;
+  border-radius: 10em;
+}
+.btnStyle01 a::after,
+.btnStyle01 button::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  background: var(--c-primary);
+  border-radius: 10em;
+  transition:
+    width 0.3s,
+    height 0.3s;
+}
+.btnStyle01 a::before,
+.btnStyle01 button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 22px;
+  width: 22px;
+  height: 14px;
+  transform: translateY(-50%);
+  background-image: url('/icons/arrow-white.svg');
+  background-repeat: no-repeat;
+  background-size: 14px 14px;
+  background-position: right center;
+  transition: background-position 0.3s;
+}
+@media (any-hover: hover) {
+  .btnStyle01 a:hover::after,
+  .btnStyle01 button:hover::after {
+    width: calc(100% + 16px);
+    height: calc(100% + 4px);
+  }
+  .btnStyle01 a:hover::before,
+  .btnStyle01 button:hover::before {
+    background-position: left center;
+  }
+}
+@media (max-width: 767px) {
+  .btnStyle01 a,
+  .btnStyle01 button {
+    min-width: 220px;
+    padding: 12px 45px;
+    font-size: 1.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   E8: simple opacity hover (logo / banner / sub nav)
+------------------------------------------------------------------ */
+.hoverFade {
+  transition: opacity 0.2s ease-in-out;
+}
+@media (any-hover: hover) {
+  .hoverFade:hover {
+    opacity: 0.7;
+  }
+}
+
+/* ------------------------------------------------------------------
+   .headStyle02 (1.8rem, small navy circle icon)
+------------------------------------------------------------------ */
+.headStyle02 {
+  position: relative;
+  padding-left: 26px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+  color: var(--c-primary);
+}
+.headStyle02::before {
+  content: '';
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--c-primary);
+}
+
+/* ------------------------------------------------------------------
+   E2: .btnStyle02 circular button (152px, 2px white ring)
+------------------------------------------------------------------ */
+.btnStyle02 {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 152px;
+  height: 152px;
+  border: 2px solid var(--c-white);
+  border-radius: 50%;
+  font-family: var(--font-en), sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--c-white);
+}
+.btnStyle02::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  bottom: -25px;
+  left: -25px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--c-primary);
+  opacity: 0;
+  transition:
+    bottom 0.3s,
+    left 0.3s,
+    opacity 0.3s;
+}
+@media (any-hover: hover) {
+  .btnStyle02:hover::after {
+    bottom: -15px;
+    left: -15px;
+    opacity: 1;
+  }
+}
+@media (max-width: 767px) {
+  .btnStyle02 {
+    width: 110px;
+    height: 110px;
+    font-size: 1.2rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Section head (enTitle + headStyle01) and section rhythm (vw margins)
+------------------------------------------------------------------ */
+.sectionHead {
+  text-align: center;
+}
+.sectionHead .headStyle01 {
+  margin-top: 14px;
+}
+
+/* E10: popup fade */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+body.is-popupOpen {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Placeholder sections for T004 (anchors only)
+------------------------------------------------------------------ */
+.sectionStub {
+  padding: 120px 20px;
+  text-align: center;
+}
+.sectionStub + .sectionStub {
+  border-top: 1px solid var(--c-rail);
+}
+.sectionStub .headStyle01 {
+  margin-top: 16px;
+  color: var(--c-primary);
+}
+@media (max-width: 767px) {
+  .sectionStub {
+    padding: 80px 20px;
+  }
+}
