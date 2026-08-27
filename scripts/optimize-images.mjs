@@ -28,14 +28,42 @@ const familyOf = (name) => {
   return name.split('-')[0]
 }
 
+/**
+ * Card icons come out of image_gen with wildly different internal margins, so they read as
+ * different sizes when dropped into the fixed 120px lineup slot. Trim the transparent border and
+ * re-centre the artwork inside a square canvas with a uniform margin so every icon has the same
+ * optical weight.
+ */
+const CARD_CONTENT_RATIO = 0.84
+
+const normalizeCard = async (file, width) => {
+  const trimmed = await sharp(file).trim({ threshold: 1 }).toBuffer()
+  const inner = Math.round(width * CARD_CONTENT_RATIO)
+  const fitted = await sharp(trimmed)
+    .resize({ width: inner, height: inner, fit: 'inside', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .toBuffer()
+  const { width: w = inner, height: h = inner } = await sharp(fitted).metadata()
+  const left = Math.round((width - w) / 2)
+  const top = Math.round((width - h) / 2)
+  return sharp(fitted).extend({
+    left,
+    top,
+    right: width - w - left,
+    bottom: width - h - top,
+    background: { r: 0, g: 0, b: 0, alpha: 0 },
+  })
+}
+
 const convert = async (file) => {
   const name = path.basename(file, '.png')
-  const width = WIDTHS[familyOf(name)] ?? DEFAULT_WIDTH
+  const family = familyOf(name)
+  const width = WIDTHS[family] ?? DEFAULT_WIDTH
   const out = path.join(DIR, `${name}.webp`)
-  const info = await sharp(file)
-    .resize({ width, withoutEnlargement: true })
-    .webp({ quality: QUALITY })
-    .toFile(out)
+  const pipeline =
+    family === 'card'
+      ? await normalizeCard(file, width)
+      : sharp(file).resize({ width, withoutEnlargement: true })
+  const info = await pipeline.webp({ quality: QUALITY }).toFile(out)
   const before = (await stat(file)).size
   process.stdout.write(
     `${name}.png (${Math.round(before / 1024)}KB) -> ${name}.webp ${info.width}x${info.height} (${Math.round(info.size / 1024)}KB)\n`,

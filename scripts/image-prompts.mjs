@@ -186,7 +186,7 @@ export const ASSETS = [
   {
     name: 'card-04',
     size: SQUARE,
-    prompt: 'Flat vector-style illustration on a fully transparent background: two people figures side by side with a heart above them, two-tone navy blue (#005099) and light blue, minimal, centered, generous margins. Icon style, no text.',
+    prompt: 'Flat vector-style illustration on a fully transparent background: three simplified adult figures of different ages standing shoulder to shoulder inside an open circular ring that loops around them, symbolizing membership and mutual support (not a couple, not romantic, no hearts), two-tone navy blue (#005099) and light blue, minimal, centered, generous margins. Icon style, no text.',
   },
   {
     name: 'card-05',
