@@ -1,50 +1,70 @@
 // Screenshot runner: builds nothing, expects `pnpm build` to have run.
-// Spawns `next start -p 3100`, captures PC/SP shots into shots/, exits.
-import { spawn, spawnSync } from 'node:child_process'
-import { mkdir } from 'node:fs/promises'
+// next.config.ts sets `output: 'export'`, so `next start` refuses to run; serve the exported out/
+// directory over a tiny static server instead, capture PC/SP shots into shots/, exit.
+import { createServer } from 'node:http'
+import { access, mkdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import puppeteer from 'puppeteer-core'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = path.join(ROOT, 'shots')
+const EXPORT_DIR = path.join(ROOT, 'out')
 const PORT = 3100
 const URL = `http://localhost:${PORT}`
-const NEXT_BIN = path.join(ROOT, 'node_modules', 'next', 'dist', 'bin', 'next')
-const READY_TIMEOUT_MS = 60_000
+const MIME = {
+  '.css': 'text/css',
+  '.html': 'text/html; charset=utf-8',
+  '.ico': 'image/x-icon',
+  '.js': 'text/javascript',
+  '.json': 'application/json',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.txt': 'text/plain; charset=utf-8',
+  '.webp': 'image/webp',
+  '.woff2': 'font/woff2',
+}
 const PC = { width: 1440, height: 900 }
 const SP = { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-const startServer = () =>
-  spawn(process.execPath, [NEXT_BIN, 'start', '-p', String(PORT)], {
-    cwd: ROOT,
-    stdio: 'ignore',
-    env: { ...process.env, NODE_ENV: 'production' },
-  })
-
-const stopServer = (child) => {
-  if (!child || child.exitCode !== null) return
-  if (process.platform === 'win32') {
-    spawnSync('taskkill', ['/PID', String(child.pid), '/T', '/F'], { stdio: 'ignore' })
-  } else {
-    child.kill('SIGTERM')
-  }
+// Mirrors the export host's routing: `/` -> index.html, extension-less paths -> `<path>.html`.
+const resolveExportFile = (url) => {
+  let file = decodeURIComponent(url.split('?')[0].split('#')[0])
+  if (file.endsWith('/')) file += 'index.html'
+  if (!path.extname(file)) file += '.html'
+  const resolved = path.resolve(EXPORT_DIR, `.${file}`)
+  return resolved.startsWith(EXPORT_DIR) ? resolved : null
 }
 
-const waitForServer = async () => {
-  const deadline = Date.now() + READY_TIMEOUT_MS
-  while (Date.now() < deadline) {
-    try {
-      const res = await fetch(URL)
-      if (res.status === 200) return
-    } catch {
-      // not up yet
+const startServer = async () => {
+  await access(path.join(EXPORT_DIR, 'index.html')).catch(() => {
+    throw new Error(`No export found at ${EXPORT_DIR}. Run \`pnpm build\` first.`)
+  })
+  const server = createServer(async (req, res) => {
+    const file = resolveExportFile(req.url ?? '/')
+    if (!file) {
+      res.writeHead(403).end('forbidden')
+      return
     }
-    await sleep(500)
-  }
-  throw new Error(`Server did not respond with 200 within ${READY_TIMEOUT_MS}ms`)
+    try {
+      const body = await readFile(file)
+      res.writeHead(200, { 'content-type': MIME[path.extname(file)] ?? 'application/octet-stream' })
+      res.end(body)
+    } catch {
+      res.writeHead(404).end('not found')
+    }
+  })
+  await new Promise((resolve, reject) => {
+    server.once('error', reject)
+    server.listen(PORT, resolve)
+  })
+  return server
+}
+
+const stopServer = (server) => {
+  if (server) server.close()
 }
 
 const assert = (cond, message) => {
@@ -162,10 +182,9 @@ const runSp = async (page) => {
 
 const main = async () => {
   await mkdir(OUT, { recursive: true })
-  const server = startServer()
+  const server = await startServer()
   let browser
   try {
-    await waitForServer()
     browser = await puppeteer.launch({
       channel: 'chrome',
       headless: true,
