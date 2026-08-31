@@ -1,0 +1,2029 @@
+@charset "UTF-8";
+
+/*
+ * HP-test（奥南会）の public/assets/css/page-business.css をそのまま移植したもの。
+ * 選択子はすべて .business-* なので衝突しない。CSS Modules ではなくグローバルで
+ * 読み込むのは、めくりの紙を document.createElement で組み立てる
+ * src/components/business/directory.js が、素のクラス名で要素を作るため。
+ *
+ * 意匠の契約（HP-test の .claude/skills/alumni-business より）:
+ *  - border-radius: 999px / 1.8rem を使わない（ピル型は差し戻し対象）
+ *  - 影はぼかさず box-shadow: 0.8rem 0.9rem 0（版ずれの影）
+ *  - 朱 --biz-vermilion は番号と割引の印だけ。面には塗らない
+ *  - めくりの尺 900ms は directory.js の BOOK_TURN_DURATION と同じ値。片方だけ変えない
+ */
+
+/* ==========================================================================
+   卒業生事業・店舗紹介 — 店主の一冊
+   Stories の「一人ずつ読む」体験を、卒業生の商いへ展開する見開き型UI。
+   ========================================================================== */
+
+.business-main {
+  /* 元サイト（HP-test / 奥南会）では common.min.css とテーマが持っていた2つ。
+     このサイトには無いので、ここで同じ役割の書体を与える。--font-serif-jp は
+     src/app/business/page.tsx が next/font で流し込む Noto Serif JP。 */
+  --okn-serif: var(--font-serif-jp), 'Noto Serif JP', 'Yu Mincho', YuMincho, 'Hiragino Mincho ProN', serif;
+  --font-sans-serif: var(--font-en), 'Montserrat', sans-serif;
+  --biz-paper: #f6f4ec;
+  --biz-paper-strong: #fffdf7;
+  --biz-paper-tint: #efece1;
+  --biz-ink: #23271f;
+  --biz-ink-soft: #5b5e56;
+  --biz-green: #1e5b41;
+  --biz-green-deep: #143f2d;
+  --biz-gold: #a98a45;
+  --biz-gold-soft: #c8b06a;
+  --biz-gold-light: #dcc98f;
+  --biz-vermilion: #b43a2b;
+  --biz-hairline: 1px solid rgba(35, 39, 31, 0.2);
+  /* 紙の繊維。SVG のノイズを薄く重ねて、面のべた塗りを避ける。
+     CSP の img-src は data: を許可済みなので background-image に置ける。 */
+  --biz-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  /* 漉きムラ。粒（grain）より粗い周期で、刷り面の濃淡をつくる。 */
+  --biz-laid:
+    repeating-linear-gradient(91deg, rgba(122, 106, 68, 0.045) 0 1px, rgba(122, 106, 68, 0) 1px 4px),
+    repeating-linear-gradient(1deg, rgba(122, 106, 68, 0.03) 0 1px, rgba(122, 106, 68, 0) 1px 6px);
+  color: var(--biz-ink);
+  background: #fbfaf6;
+}
+
+.business-directory {
+  /* 移植元の 9.4rem は向こうのヘッダーの丈に合わせた値。こちらのヘッダーは
+     固定で --header-h あるので、それを基準に取り直す（/stories と同じ考え方）。 */
+  min-height: calc(100vh - var(--header-h));
+  padding: calc(var(--header-h) + 5rem) 0 4rem;
+  overflow: hidden;
+  background: #fbfaf6;
+}
+
+.business-directory__inner {
+  position: relative;
+  width: min(100%, 144rem);
+  margin: 0 auto;
+  padding-inline: clamp(2rem, 4.4vw, 6.4rem);
+}
+
+.business-directory__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.4rem;
+  min-height: 8.8rem;
+  margin-bottom: 1.4rem;
+  border-bottom: 1px solid var(--biz-gold);
+}
+
+.business-directory__heading-copy {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.business-directory__eyebrow {
+  font-family: var(--font-sans-serif);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--biz-green);
+}
+
+.business-directory__title {
+  font-family: var(--okn-serif);
+  font-size: clamp(2.8rem, 3vw, 4rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.12em;
+}
+
+/* 本を開く前の呼びかけ。誰に会いに行く頁なのかを、ここで一度だけ言う。
+   絞り込みの引き出しは見出しの下端から降りてくるので、この段はその後ろに敷く。 */
+.business-directory__masthead {
+  max-width: 64rem;
+  margin: 2.6rem 0 3.4rem;
+}
+
+.business-directory__lead {
+  margin: 0;
+  color: var(--biz-green-deep);
+  font-family: var(--okn-serif);
+  font-size: clamp(2rem, 2.2vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.62;
+  letter-spacing: 0.08em;
+}
+
+.business-directory__intro {
+  margin: 1.4rem 0 0;
+  color: var(--biz-ink-soft);
+  font-size: 1.3rem;
+  line-height: 1.9;
+}
+
+.business-filters__toggle,
+.business-filters__reset,
+.business-book-nav__button,
+.business-card__detail summary,
+.business-side-book {
+  border-radius: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.business-filters__toggle {
+  min-height: 5.8rem;
+  padding: 0 3.2rem;
+  border: 1px solid var(--biz-green);
+  background: transparent;
+  color: var(--biz-green-deep);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.business-filters__toggle:hover,
+.business-filters__toggle[aria-expanded="true"] {
+  background: var(--biz-green-deep);
+  color: var(--biz-paper-strong);
+}
+
+.business-filters {
+  position: absolute;
+  z-index: 20;
+  top: 9.6rem;
+  right: clamp(2rem, 4.4vw, 6.4rem);
+  left: clamp(2rem, 4.4vw, 6.4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem 2.4rem;
+  align-items: end;
+  padding: 2.4rem 2.6rem;
+  border: var(--biz-hairline);
+  border-top: 3px solid var(--biz-green-deep);
+  background: var(--biz-paper-strong);
+  box-shadow: 0.8rem 0.9rem 0 rgba(35, 39, 31, 0.14);
+}
+
+.business-filters[hidden] {
+  display: none;
+}
+
+.business-filters__fields {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.6rem;
+}
+
+.business-filters__field {
+  display: grid;
+  gap: 0.6rem;
+  color: var(--biz-green-deep);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.business-filters select {
+  min-height: 4.4rem;
+  padding: 0 0.6rem;
+  border: 0;
+  border-bottom: 1px solid var(--biz-green);
+  border-radius: 0;
+  background: transparent;
+  color: var(--biz-ink);
+  font-family: inherit;
+  font-size: 1.4rem;
+}
+
+/* iOS Safari は、文字が 16px 未満の欄に焦点が当たるとページ全体を勝手に拡大
+   する。<select> でも同じことが起きる。タッチの画面では 16px にして拡大を
+   起こさせない。root が幅に追従するため rem では閾値に届かないので px で置く。
+   page-home.css の .home-stories-field と同じ対処。 */
+@media (pointer: coarse) {
+  .business-filters select {
+    font-size: 16px;
+  }
+}
+
+.business-filters__reset {
+  min-height: 4.4rem;
+  padding: 0 2rem;
+  border: 1px solid var(--biz-green-deep);
+  background: transparent;
+  color: var(--biz-green-deep);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.business-filters__reset:hover {
+  background: var(--biz-green-deep);
+  color: var(--biz-paper-strong);
+}
+
+.business-filters__toggle:focus-visible,
+.business-filters select:focus-visible,
+.business-filters__reset:focus-visible,
+.business-card__detail summary:focus-visible,
+.business-book-nav__button:focus-visible,
+.business-side-book:focus-visible {
+  outline: 3px solid var(--biz-vermilion);
+  outline-offset: 3px;
+}
+
+.business-directory__count {
+  position: absolute;
+  z-index: 21;
+  top: 18.8rem;
+  left: clamp(4.6rem, 7vw, 10rem);
+  margin: 0;
+  font-family: var(--okn-serif);
+  font-size: 1.5rem;
+}
+
+.business-filters[hidden] + .business-directory__count {
+  display: none;
+}
+
+.business-directory__count [data-directory-count] {
+  color: var(--biz-vermilion);
+  font-weight: 700;
+}
+
+.business-directory__count-total {
+  color: var(--biz-ink-soft);
+  font-family: var(--font-sans-serif);
+  font-size: 1.1rem;
+}
+
+/* ---------- 掲載写真の束 ----------
+   主画像の下に小さく並べ、押されたものを主画像へ差し替える（business-shots.js）。
+   横スワイプは本のめくりが使っているので、押して選ぶ形にしている。
+   JS が無い環境では、ただ小さな写真が並ぶ。押せないが枚数は減らない。 */
+.business-card__shots {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.business-card__shots-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.business-card__shot {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid rgba(35, 39, 31, 0.28);
+  border-radius: 0;
+  background: none;
+  /* 押せるのは JS が付いてから。無いときに指を誘わない。 */
+  cursor: default;
+}
+
+.business-card__shots[data-card-shots-ready] .business-card__shot {
+  cursor: pointer;
+}
+
+.business-card__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 主画像より一段くすませ、いま出ている1枚を目立たせる。 */
+  filter: saturate(0.82) brightness(0.94);
+  transition: filter 180ms ease;
+}
+
+.business-card__shot[aria-current="true"] {
+  border-color: var(--biz-vermilion);
+  box-shadow: 0.25rem 0.3rem 0 rgba(180, 58, 43, 0.28);
+}
+
+.business-card__shot[aria-current="true"] img {
+  filter: none;
+}
+
+.business-card__shot:focus-visible {
+  outline: 3px solid var(--biz-vermilion);
+  outline-offset: 2px;
+}
+
+/* ---------- 見開き ---------- */
+.business-book-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(8rem, 8vw, 12rem) minmax(0, 1fr) clamp(8rem, 8vw, 12rem);
+  align-items: center;
+  min-height: 72rem;
+}
+
+/* ---------- 本体（表紙・小口・のど） ----------
+   紙の束を「一枚の面」に見せないための三点：外周に表紙の板、左右に積層した小口、
+   中央にのどの落ち込み。いずれも装飾なので aria-hidden の空要素で持つ。 */
+.business-book {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+  filter: drop-shadow(0 1.5rem 1.3rem rgba(20, 31, 24, 0.18));
+  /* 横は紙をめくる指の動きに使う。縦はページのスクロールに渡す。 */
+  touch-action: pan-y;
+}
+
+/* 指で紙をつまんでいる間は、選択や長押しメニューが割り込まないようにする。 */
+.business-main[data-book-dragging="true"] .business-book {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.business-book__cover,
+.business-book__leaves,
+.business-book__gutter {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 表紙の板。紙面より一回り大きく、背に金の罫を一本。 */
+.business-book__cover {
+  top: -1.1rem;
+  right: -1.4rem;
+  bottom: -1.5rem;
+  left: -1.4rem;
+  background:
+    linear-gradient(180deg, #1f5340 0%, #17452f 55%, #103526 100%);
+  box-shadow: inset 0 0 0 1px rgba(201, 176, 106, 0.45);
+}
+
+.business-book__cover::before {
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid rgba(201, 176, 106, 0.4);
+  content: "";
+}
+
+/* 背（のど）の布。中央にだけ濃い帯を落とす。 */
+.business-book__cover::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 5.2rem;
+  background:
+    linear-gradient(90deg, rgba(9, 28, 20, 0) 0%, rgba(9, 28, 20, 0.55) 42%, rgba(9, 28, 20, 0.65) 50%, rgba(9, 28, 20, 0.55) 58%, rgba(9, 28, 20, 0) 100%);
+  content: "";
+  transform: translateX(-50%);
+}
+
+/* 小口。1px の縞を重ねて紙の枚数に見せる。 */
+.business-book__leaves {
+  inset: 0.5rem -0.9rem;
+}
+
+.business-book__leaves::before,
+.business-book__leaves::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.9rem;
+  background:
+    repeating-linear-gradient(90deg, #efe9d8 0 1px, #cdc4ac 1px 2px);
+  content: "";
+}
+
+.business-book__leaves::before {
+  left: 0;
+  box-shadow: inset -0.2rem 0 0.4rem rgba(35, 39, 31, 0.24);
+}
+
+.business-book__leaves::after {
+  right: 0;
+  box-shadow: inset 0.2rem 0 0.4rem rgba(35, 39, 31, 0.24);
+}
+
+.business-directory__grid {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+  perspective: 180rem;
+  transform-style: preserve-3d;
+}
+
+/* のどの落ち込み。紙の上に固定で置き、めくっている間も動かさない。 */
+.business-book__gutter {
+  z-index: 14;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 13rem;
+  background:
+    linear-gradient(90deg,
+      rgba(58, 46, 22, 0) 0%,
+      rgba(58, 46, 22, 0.05) 26%,
+      rgba(48, 38, 18, 0.16) 42%,
+      rgba(38, 30, 14, 0.3) 49.2%,
+      rgba(255, 253, 247, 0.5) 50%,
+      rgba(38, 30, 14, 0.28) 50.8%,
+      rgba(48, 38, 18, 0.14) 58%,
+      rgba(58, 46, 22, 0.04) 74%,
+      rgba(58, 46, 22, 0) 100%);
+  transform: translateX(-50%);
+}
+
+.business-card {
+  position: relative;
+  display: none;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 70rem;
+  border: 1px solid #bdb6a2;
+  background: var(--biz-paper-strong);
+  box-shadow: 0.8rem 0.9rem 0 rgba(35, 39, 31, 0.14);
+}
+
+.business-card[data-book-active="true"] {
+  display: grid;
+  animation: business-page-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* めくりの最中に差し替わる紙は、フェードインを重ねない。
+   属性は [data-directory-root]（= .business-main）に付くので、そこから辿る。 */
+.business-main[data-book-turning="true"] .business-card[data-book-active="true"],
+.business-card[data-book-turned="true"] {
+  animation: none;
+}
+
+.business-card[hidden] {
+  display: none !important;
+}
+
+@keyframes business-page-in {
+  from { opacity: 0; transform: translateY(0.8rem) scale(0.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 刷り面の粒。写真にも活字面にも同じ紙目をかけて、二つの面を一枚の紙に見せる。 */
+.business-card::after,
+.business-page-turn__sheet::before {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-image: var(--biz-grain);
+  background-size: 18rem 18rem;
+  content: "";
+  opacity: 0.085;
+  pointer-events: none;
+}
+
+/* ---------- 紙をめくる一枚 ----------
+   1枚の紙が立ち上がって裏返るまでを、3つの手がかりで組み立てる。
+   (1) 葉（__leaf）の回転そのもの
+   (2) 表裏の陰り（__shade）— 光源は左上。表は伏せるほど暗く、裏は起き上がるほど明るく
+   (3) 落ち影（__cast）— 受け側のページに、紙が横切る影を落とす
+   __cast は回転しないので、葉と兄弟にして親（__turn）は動かさない。 */
+.business-page-turn {
+  position: absolute;
+  z-index: 12;
+  inset: 0;
+  pointer-events: none;
+}
+
+.business-page-turn__leaf {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: transform 900ms cubic-bezier(0.42, 0.02, 0.22, 1);
+  will-change: transform;
+}
+
+.business-page-turn--next .business-page-turn__leaf {
+  right: 0;
+  transform-origin: left center;
+}
+
+.business-page-turn--next.is-turning .business-page-turn__leaf {
+  transform: rotateY(-180deg);
+}
+
+.business-page-turn--previous .business-page-turn__leaf {
+  left: 0;
+  transform-origin: right center;
+}
+
+.business-page-turn--previous.is-turning .business-page-turn__leaf {
+  transform: rotateY(180deg);
+}
+
+/* ---------- 紙のたわみ ----------
+   紙は板ではないので、一枚の面をそのまま回すと下敷きが裏返っただけに見える。
+   縦に細長い「こま」へ分け、根元から順に少しずつ角度を足していく。こまは入れ子
+   なので、各こまは親からの相対角だけを持てばよく、曲面の合成はブラウザに任せる。
+   角度の足し幅は根元ほど小さく先ほど大きい（--biz-seg）。めくり始めに小口が
+   先に浮き、シールを剥がすように紙がしなる。 */
+.business-page-turn__seg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform: translateX(calc(var(--biz-dir, 1) * 100%));
+  transform-origin: left center;
+  transform-style: preserve-3d;
+}
+
+.business-page-turn--previous:not(.business-page-turn--rewind) .business-page-turn__seg {
+  right: 0;
+  left: auto;
+  transform-origin: right center;
+}
+
+/* 根元のこまだけは紙の分割幅そのもの。位置も動かさない。幅は JS が入れる。 */
+.business-page-turn__seg--root {
+  transform: none;
+}
+
+.business-page-turn--previous:not(.business-page-turn--rewind) .business-page-turn__seg--root {
+  transform: none;
+}
+
+.business-page-turn.is-turning .business-page-turn__seg:not(.business-page-turn__seg--root) {
+  animation: business-leaf-bend 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+/* たわみは両端でゼロ。伏せ切った紙が折れたままにならないようにする。 */
+@keyframes business-leaf-bend {
+  0% { transform: translateX(calc(var(--biz-dir, 1) * 100%)) rotateY(0deg); }
+  18% { transform: translateX(calc(var(--biz-dir, 1) * 100%)) rotateY(calc(var(--biz-seg, 0) * 2.7deg)); }
+  44% { transform: translateX(calc(var(--biz-dir, 1) * 100%)) rotateY(calc(var(--biz-seg, 0) * 2.2deg)); }
+  72% { transform: translateX(calc(var(--biz-dir, 1) * 100%)) rotateY(calc(var(--biz-seg, 0) * 1.15deg)); }
+  100% { transform: translateX(calc(var(--biz-dir, 1) * 100%)) rotateY(0deg); }
+}
+
+/* こま = 紙の窓。ここで刻み、中の紙面（__sheet）は紙の全幅を保つ。
+   継ぎ目に髪一本の隙間が出るので、幅を 1px だけ伸ばして隣と重ねる。 */
+.business-page-turn__face {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100% + 1px);
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.business-page-turn__face--back {
+  transform: rotateY(180deg);
+}
+
+/* 紙面。幅は紙の全幅で、こまごとに左右へずらして必要な帯だけを窓に見せる。
+   陰りも罫線もここに置くので、こまをまたいでも途切れない。 */
+.business-page-turn__sheet {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--biz-paper-strong);
+  box-shadow: inset 0 0 0 1px #bdb6a2;
+}
+
+/* たわんだ紙の面。円筒のように谷が陰り、稜がわずかに光る。こまごとに濃度を
+   変えると縞に見えてしまうので、紙面いっぱいの一枚で持たせて段差を作らない。 */
+.business-page-turn__curl {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(90deg,
+    rgba(16, 13, 6, 0) 0%,
+    rgba(16, 13, 6, 0.3) 26%,
+    rgba(16, 13, 6, 0.36) 40%,
+    rgba(255, 251, 240, 0.2) 62%,
+    rgba(16, 13, 6, 0.1) 78%,
+    rgba(16, 13, 6, 0.34) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.business-page-turn.is-turning .business-page-turn__curl {
+  animation: business-leaf-curl 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+@keyframes business-leaf-curl {
+  0% { opacity: 0; }
+  18% { opacity: 0.92; }
+  44% { opacity: 0.76; }
+  72% { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+/* 陰り。面ごとに1枚かぶせ、めくりと同じ尺・同じイージングで濃度を動かす。 */
+.business-page-turn__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* のど側（回転軸）ほど暗い。面全体にも下地の陰りを置かないと、紙が起きている
+   実感が出ず、絵だけが差し替わったように見える。 */
+.business-page-turn--next .business-page-turn__face--front .business-page-turn__shade,
+.business-page-turn--previous .business-page-turn__face--back .business-page-turn__shade {
+  background: linear-gradient(270deg, rgba(26, 21, 11, 0.28) 0%, rgba(22, 18, 9, 0.52) 58%, rgba(14, 11, 5, 0.86) 100%);
+}
+
+.business-page-turn--next .business-page-turn__face--back .business-page-turn__shade,
+.business-page-turn--previous .business-page-turn__face--front .business-page-turn__shade {
+  background: linear-gradient(90deg, rgba(26, 21, 11, 0.28) 0%, rgba(22, 18, 9, 0.52) 58%, rgba(14, 11, 5, 0.86) 100%);
+}
+
+/* 紙の照り。角度が浅いあいだだけ、細い光の帯が紙面をなでる。 */
+.business-page-turn__shade::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, rgba(255, 252, 240, 0) 38%, rgba(255, 252, 240, 0.5) 50%, rgba(255, 252, 240, 0) 62%);
+  content: "";
+  opacity: 0;
+}
+
+.business-page-turn.is-turning .business-page-turn__face--front .business-page-turn__shade {
+  animation: business-leaf-shade-front 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+.business-page-turn.is-turning .business-page-turn__face--back .business-page-turn__shade {
+  animation: business-leaf-shade-back 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+.business-page-turn.is-turning .business-page-turn__shade::after {
+  animation: business-leaf-sheen 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+@keyframes business-leaf-shade-front {
+  0% { opacity: 0; }
+  20% { opacity: 0.4; }
+  50% { opacity: 0.74; }
+  100% { opacity: 0.92; }
+}
+
+@keyframes business-leaf-shade-back {
+  0% { opacity: 0.92; }
+  50% { opacity: 0.62; }
+  85% { opacity: 0.18; }
+  100% { opacity: 0; }
+}
+
+@keyframes business-leaf-sheen {
+  0% { opacity: 0; transform: translateX(-16%); }
+  22% { opacity: 0.65; }
+  50% { opacity: 0.28; }
+  78% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateX(16%); }
+}
+
+/* 紙の下から現れる面。行き先の見開きの、めくらない側の1ページ。 */
+.business-page-turn__reveal {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  overflow: hidden;
+  border: 1px solid #bdb6a2;
+  background: var(--biz-paper-strong);
+}
+
+.business-page-turn--next .business-page-turn__reveal {
+  right: 0;
+  border-left: 0;
+}
+
+.business-page-turn--previous .business-page-turn__reveal {
+  left: 0;
+  border-right: 0;
+}
+
+/* 現れたばかりのページは、まだ紙の陰にいる。紙が寝ていくにつれて明るむ。
+   葉の縁に貼りつく落ち影は面の box-shadow が持つので、こちらは面全体を沈める。 */
+.business-page-turn__reveal::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+.business-page-turn--next .business-page-turn__reveal::after {
+  background: linear-gradient(90deg, rgba(16, 13, 6, 0.6) 0%, rgba(18, 14, 7, 0.5) 45%, rgba(20, 16, 8, 0.34) 100%);
+}
+
+.business-page-turn--previous .business-page-turn__reveal::after {
+  background: linear-gradient(270deg, rgba(16, 13, 6, 0.6) 0%, rgba(18, 14, 7, 0.5) 45%, rgba(20, 16, 8, 0.34) 100%);
+}
+
+.business-page-turn.is-turning .business-page-turn__reveal::after {
+  animation: business-leaf-reveal-shade 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+@keyframes business-leaf-reveal-shade {
+  0% { opacity: 0.95; }
+  40% { opacity: 0.58; }
+  72% { opacity: 0.16; }
+  100% { opacity: 0; }
+}
+
+/* 落ち影。めくられる側ではなく、受け側のページの上を滑る。
+   のど際だけ濃くしても、写真面では地の暗さに紛れて見えない。受け側の半分ほど
+   まで広く落として、はじめて紙が浮いていると読める。 */
+.business-page-turn__cast {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.business-page-turn--next .business-page-turn__cast {
+  left: 0;
+  background: linear-gradient(270deg, rgba(14, 11, 5, 0.8) 0%, rgba(16, 13, 6, 0.56) 20%, rgba(18, 14, 7, 0.3) 46%, rgba(20, 16, 8, 0.1) 72%, rgba(20, 16, 8, 0) 100%);
+}
+
+.business-page-turn--previous .business-page-turn__cast {
+  right: 0;
+  background: linear-gradient(90deg, rgba(14, 11, 5, 0.8) 0%, rgba(16, 13, 6, 0.56) 20%, rgba(18, 14, 7, 0.3) 46%, rgba(20, 16, 8, 0.1) 72%, rgba(20, 16, 8, 0) 100%);
+}
+
+.business-page-turn.is-turning .business-page-turn__cast {
+  animation: business-leaf-cast 900ms cubic-bezier(0.42, 0.02, 0.22, 1) forwards;
+}
+
+@keyframes business-leaf-cast {
+  0% { opacity: 0; }
+  30% { opacity: 0.95; }
+  62% { opacity: 0.66; }
+  100% { opacity: 0; }
+}
+
+.business-page-turn__sheet > .business-card__body,
+.business-page-turn__sheet > .business-card__figure,
+.business-page-turn__reveal > .business-card__body,
+.business-page-turn__reveal > .business-card__figure {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+}
+
+.business-page-turn__sheet > .business-card__figure img,
+.business-page-turn__sheet > .business-card__figure--plate .business-card__plate,
+.business-page-turn__reveal > .business-card__figure img,
+.business-page-turn__reveal > .business-card__figure--plate .business-card__plate {
+  height: 100%;
+  min-height: 100%;
+}
+
+.business-page-turn__face .business-card__detail {
+  pointer-events: none;
+}
+
+/* スマホは見開きではなく一面をめくる。葉と落ち影を紙面いっぱいに広げる。 */
+.business-page-turn--mobile .business-page-turn__leaf,
+.business-page-turn--mobile .business-page-turn__cast {
+  width: 100%;
+}
+
+/* 一面めくりでは影の受け皿が狭いので、落ち影は控えめに。
+   綴じは左なので、影も左のノド際を濃くする。 */
+.business-page-turn--mobile .business-page-turn__cast {
+  right: auto;
+  left: 0;
+  background: linear-gradient(90deg, rgba(14, 11, 5, 0.72) 0%, rgba(16, 13, 6, 0.4) 26%, rgba(20, 16, 8, 0.12) 60%, rgba(20, 16, 8, 0) 100%);
+  filter: opacity(0.6);
+}
+
+/* 戻るときも紙は左の背から動く。左に伏せていた紙が起き上がって戻ってくるので、
+   回転は -180 度から 0 度へ。表が行き先、裏が今のページ。 */
+.business-page-turn--rewind .business-page-turn__leaf {
+  right: 0;
+  left: auto;
+  transform: rotateY(-180deg);
+  transform-origin: left center;
+}
+
+.business-page-turn--rewind.is-turning .business-page-turn__leaf {
+  transform: rotateY(0deg);
+}
+
+/* 陰りは「起きて伏せる」順が逆になる。濃くなる側と薄くなる側を入れ替える。 */
+.business-page-turn--rewind .business-page-turn__face--front .business-page-turn__shade {
+  background: linear-gradient(270deg, rgba(26, 21, 11, 0.28) 0%, rgba(22, 18, 9, 0.52) 58%, rgba(14, 11, 5, 0.86) 100%);
+}
+
+.business-page-turn--rewind .business-page-turn__face--back .business-page-turn__shade {
+  background: linear-gradient(90deg, rgba(26, 21, 11, 0.28) 0%, rgba(22, 18, 9, 0.52) 58%, rgba(14, 11, 5, 0.86) 100%);
+}
+
+.business-page-turn--rewind.is-turning .business-page-turn__face--front .business-page-turn__shade {
+  animation-name: business-leaf-shade-back;
+}
+
+.business-page-turn--rewind.is-turning .business-page-turn__face--back .business-page-turn__shade {
+  animation-name: business-leaf-shade-front;
+}
+
+.business-page-turn__card {
+  display: grid !important;
+  width: 100%;
+  min-height: 100%;
+  animation: none !important;
+  box-shadow: none;
+}
+
+.business-main[data-book-turning="true"] .business-side-book,
+.business-main[data-book-turning="true"] .business-book-nav__button {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.business-card__figure {
+  position: relative;
+  min-width: 0;
+  min-height: 70rem;
+  margin: 0;
+  overflow: hidden;
+  background: var(--biz-green-deep);
+}
+
+.business-card__figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 70rem;
+  object-fit: cover;
+  object-position: center;
+  filter: sepia(0.05) saturate(0.9);
+}
+
+.business-card:first-child .business-card__figure img {
+  object-position: 50% center;
+}
+
+.business-card__figure--plate .business-card__plate {
+  display: grid;
+  place-content: center;
+  gap: 1.2rem;
+  min-height: 70rem;
+  margin: 0;
+  padding: 4rem;
+  border: 1rem solid var(--biz-paper-tint);
+  outline: 1px solid var(--biz-gold);
+  outline-offset: -1rem;
+  background: var(--biz-green-deep);
+  text-align: center;
+}
+
+.business-card__plate-name {
+  color: var(--biz-gold-light);
+  font-family: var(--okn-serif);
+  font-size: clamp(2.4rem, 2.5vw, 3.5rem);
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+}
+
+.business-card__plate-note {
+  color: rgba(220, 201, 143, 0.75);
+  font-size: 1.1rem;
+  letter-spacing: 0.16em;
+}
+
+.business-card__badge {
+  position: absolute;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  z-index: 2;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--biz-gold-soft);
+  background: rgba(246, 244, 236, 0.92);
+  color: var(--biz-ink);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.business-card__identity {
+  display: none;
+}
+
+.business-card__folio {
+  position: absolute;
+  z-index: 5;
+  top: 3.4rem;
+  left: 3.4rem;
+  display: grid;
+  place-items: center;
+  width: 7rem;
+  height: 7rem;
+  margin: 0;
+  overflow: visible;
+  border-radius: 50%;
+  background: var(--biz-vermilion);
+  color: transparent;
+  font-size: 0;
+  box-shadow: 0 0.5rem 0 rgba(35, 39, 31, 0.08);
+}
+
+.business-card__folio span {
+  color: var(--biz-paper-strong);
+  font-family: var(--font-sans-serif);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.business-card__folio::after {
+  position: absolute;
+  top: 1.6rem;
+  left: 8.7rem;
+  width: 12rem;
+  color: var(--biz-paper-strong);
+  content: "ALUMNI\A BUSINESS";
+  white-space: pre;
+  font-family: var(--font-sans-serif);
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: 0.2em;
+}
+
+.business-card__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(4.8rem, 5vw, 7.2rem) clamp(3.8rem, 4.5vw, 6.4rem) 4.8rem;
+  /* のど側がわずかに沈み、小口側が明るく反る。紙が平面でないことの手がかり。 */
+  background:
+    var(--biz-laid),
+    linear-gradient(90deg, #efe9d9 0%, #f9f5ea 6%, var(--biz-paper-strong) 34%, #fffefa 88%, #f6f1e3 100%);
+}
+
+.business-card__figure::after,
+.business-card__body::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 6rem;
+  content: "";
+  pointer-events: none;
+}
+
+/* 左ページののど側（右端）と右ページののど側（左端）に、紙の反りの影を落とす。 */
+.business-card__figure::after {
+  right: 0;
+  background: linear-gradient(90deg, rgba(26, 21, 10, 0) 0%, rgba(26, 21, 10, 0.22) 100%);
+}
+
+.business-card__body::before {
+  left: 0;
+  background: linear-gradient(270deg, rgba(26, 21, 10, 0) 0%, rgba(26, 21, 10, 0.12) 100%);
+}
+
+.business-card__meta {
+  order: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  margin-top: 1.6rem;
+  padding-block: 1.2rem;
+  border-block: 1px solid var(--biz-gold-soft);
+  color: var(--biz-ink);
+  font-size: 1.1rem;
+}
+
+.business-card__meta > span + span::before {
+  margin-right: 0.8rem;
+  color: var(--biz-gold);
+  content: "/";
+}
+
+.business-card__type {
+  color: var(--biz-ink);
+  font-weight: 700;
+}
+
+.business-card__name {
+  order: 1;
+  margin: 0;
+  font-family: "DM Serif Display", var(--okn-serif);
+  font-size: clamp(3.8rem, 4vw, 5.6rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: 0.02em;
+}
+
+.business-card__owner {
+  order: 2;
+  margin-top: 1.4rem;
+  font-family: var(--okn-serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.business-card__owner-name {
+  display: block;
+}
+
+.business-card__owner-details {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.business-card__graduation {
+  order: 3;
+  margin-top: 1.6rem;
+  padding-block: 1.2rem;
+  border-block: 1px solid var(--biz-gold-soft);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.business-card__graduation + .business-card__quote {
+  margin-top: 3.2rem;
+}
+
+.business-card:has(.business-card__graduation) .business-card__meta {
+  display: none;
+}
+
+.business-card__quote {
+  order: 4;
+  margin: 3.2rem 0 0;
+  color: var(--biz-vermilion);
+  font-family: var(--okn-serif);
+  font-size: clamp(2.4rem, 2.6vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: 0.05em;
+}
+
+.business-card__summary {
+  order: 5;
+  margin-top: 2.2rem;
+  font-size: 1.3rem;
+  line-height: 1.9;
+}
+
+/* 本文。見開きの右ページを、名簿ではなく読み物にするための段。
+   引用と割引のあいだが空いていたので、そこを文章で埋める。 */
+.business-card__prose {
+  order: 6;
+  margin-top: 1.8rem;
+}
+
+.business-card__prose p {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 2.05;
+  text-align: justify;
+}
+
+.business-card__prose p + p {
+  margin-top: 1.2rem;
+  /* 段落の頭は一字下げ。組版の作法をそのまま持ち込む。 */
+  text-indent: 1em;
+}
+
+.business-card__discount {
+  order: 7;
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 2.4rem;
+  padding: 1.2rem 1.6rem 1.2rem 4rem;
+  border-left: 0.8rem solid var(--biz-gold);
+  background: transparent;
+}
+
+.business-card__discount-flag {
+  color: var(--biz-vermilion);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.business-card__discount-text {
+  color: var(--biz-green-deep);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.business-card__detail {
+  order: 8;
+  margin-top: auto;
+  padding-top: 2.4rem;
+}
+
+.business-card__detail summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 7rem;
+  padding: 0 6rem 0 3rem;
+  border: 1px solid var(--biz-green);
+  background: var(--biz-green-deep);
+  color: var(--biz-paper-strong);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  list-style: none;
+}
+
+.business-card__detail summary::-webkit-details-marker {
+  display: none;
+}
+
+.business-card__detail summary::after {
+  position: absolute;
+  top: 50%;
+  right: 2.6rem;
+  width: 2.4rem;
+  height: 1.8rem;
+  background: var(--biz-paper-strong);
+  content: "";
+  mask: url("/assets/img/common/icon/arrow.svg") center / contain no-repeat;
+  transform: translateY(-50%);
+}
+
+.business-card__detail[open] summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.business-card__detail > p {
+  margin: 1.6rem 0 0;
+  padding: 1.4rem 1.6rem;
+  border-left: 2px solid var(--biz-gold);
+  color: var(--biz-ink-soft);
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+/* ---------- 前後の閉じた本 ---------- */
+.business-side-book {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-content: center;
+  gap: 1.2rem;
+  width: calc(100% + 3rem);
+  min-height: 62rem;
+  padding: 3rem 1.4rem;
+  border: 0.6rem solid var(--biz-paper-tint);
+  outline: 1px solid var(--biz-gold);
+  outline-offset: -0.7rem;
+  color: var(--biz-gold-light);
+  text-align: center;
+  transition: transform 180ms ease;
+}
+
+.business-side-book:hover {
+  transform: translateY(-0.8rem);
+}
+
+/* 閉じた本。小口（紙の束）と背の丸みを入れて、色板に見えないようにする。 */
+.business-side-book::before,
+.business-side-book::after {
+  position: absolute;
+  top: -0.6rem;
+  bottom: -0.6rem;
+  content: "";
+  pointer-events: none;
+}
+
+.business-side-book::before {
+  width: 1.2rem;
+  background: repeating-linear-gradient(90deg, #ece5d3 0 1px, #c8bfa7 1px 2px);
+}
+
+.business-side-book::after {
+  width: 2.4rem;
+}
+
+.business-side-book--previous::before {
+  left: -0.6rem;
+  box-shadow: inset -0.2rem 0 0.4rem rgba(16, 26, 20, 0.35);
+}
+
+.business-side-book--next::before {
+  right: -0.6rem;
+  box-shadow: inset 0.2rem 0 0.4rem rgba(16, 26, 20, 0.35);
+}
+
+.business-side-book--previous::after {
+  right: -0.6rem;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.28) 62%, rgba(255, 255, 255, 0.12) 100%);
+}
+
+.business-side-book--next::after {
+  left: -0.6rem;
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.28) 62%, rgba(255, 255, 255, 0.12) 100%);
+}
+
+.business-side-book--previous {
+  justify-self: end;
+  background:
+    var(--biz-laid),
+    linear-gradient(90deg, #1d4a3d 0%, #183f34 42%, #123128 100%);
+  transform: rotate(-2deg);
+}
+
+.business-side-book--next {
+  justify-self: start;
+  background:
+    var(--biz-laid),
+    linear-gradient(270deg, #7c392f 0%, #6d3129 42%, #55251e 100%);
+  transform: rotate(2deg);
+}
+
+.business-side-book--previous:hover {
+  transform: rotate(-2deg) translateY(-0.8rem);
+}
+
+.business-side-book--next:hover {
+  transform: rotate(2deg) translateY(-0.8rem);
+}
+
+.business-side-book__label {
+  position: relative;
+  z-index: 2;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+}
+
+.business-side-book__number {
+  position: relative;
+  z-index: 2;
+  font-family: var(--okn-serif);
+  font-size: 2.8rem;
+}
+
+.business-side-book__name {
+  z-index: 2;
+  position: absolute;
+  right: 1rem;
+  bottom: 2rem;
+  left: 1rem;
+  overflow: hidden;
+  color: rgba(220, 201, 143, 0.72);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- ページ送り ---------- */
+.business-book-nav {
+  display: grid;
+  grid-template-columns: 25rem auto 25rem;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4rem, 8vw, 12rem);
+  margin-top: 2.2rem;
+}
+
+.business-book-nav__button {
+  position: relative;
+  min-height: 5.8rem;
+  padding: 0 5rem;
+  border: 1px solid var(--biz-green);
+  background: transparent;
+  color: var(--biz-green-deep);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.business-book-nav__button::after {
+  position: absolute;
+  top: 50%;
+  width: 2.2rem;
+  height: 1.8rem;
+  background: var(--biz-green-deep);
+  content: "";
+  mask: url("/assets/img/common/icon/arrow.svg") center / contain no-repeat;
+  transform: translateY(-50%);
+}
+
+.business-book-nav__button--previous::after {
+  left: 2.4rem;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.business-book-nav__button--next::after {
+  right: 2.4rem;
+}
+
+.business-book-nav__button:hover {
+  background: var(--biz-green-deep);
+  color: var(--biz-paper-strong);
+}
+
+.business-book-nav__button:hover::after {
+  background: var(--biz-paper-strong);
+}
+
+.business-book-nav__position {
+  min-width: 7rem;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-sans-serif);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.business-directory__empty {
+  margin: 4rem 0 0;
+  padding: 3rem 2rem;
+  border-block: 1px solid var(--biz-gold);
+  text-align: center;
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .business-card[data-book-active="true"] { animation: none; }
+  .business-page-turn__leaf { transition: none; }
+  .business-page-turn.is-turning .business-page-turn__shade,
+  .business-page-turn.is-turning .business-page-turn__shade::after,
+  .business-page-turn.is-turning .business-page-turn__reveal::after,
+  .business-page-turn.is-turning .business-page-turn__cast { animation: none; }
+  .business-side-book,
+  .business-filters__toggle,
+  .business-filters__reset { transition: none; }
+}
+
+@media screen and (max-width: 1199px) {
+  .business-book-stage {
+    grid-template-columns: 7rem minmax(0, 1fr) 7rem;
+  }
+
+  .business-card,
+  .business-card__figure,
+  .business-card__figure img,
+  .business-card__figure--plate .business-card__plate {
+    min-height: 64rem;
+  }
+
+  .business-card__body {
+    padding: 5rem 3.6rem 3.6rem;
+  }
+
+  .business-card__quote {
+    font-size: 2.5rem;
+  }
+
+  .business-card__summary {
+    font-size: 1.2rem;
+  }
+
+  .business-side-book {
+    width: calc(100% + 2rem);
+    min-height: 56rem;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .business-directory {
+    padding-bottom: 10rem;
+  }
+
+  .business-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .business-filters__fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .business-book-stage {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  .business-side-book {
+    display: none;
+  }
+
+  .business-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .business-book-nav {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  /* 本を早く画面へ入れたいが、上端は削りきれない。ヘッダーの中身は
+     position:fixed で紙の上に乗っており、その帯は下端 68px まである
+     （ANNIVERSARY のボタンがいちばん下）。ここを 4.4rem まで削ったところ、
+     見出しが静止状態ですでに帯の中へ入り、少し送っただけで「卒業生事業・」の
+     行が丸ごとヘッダーの裏へ消えた。帯の下端＋余白ぶんは必ず空ける。 */
+  .business-directory {
+    padding-top: 7.2rem;
+    padding-bottom: 2rem;
+  }
+
+  .business-directory__inner {
+    padding-inline: 1.8rem;
+  }
+
+  .business-directory__header {
+    align-items: end;
+    min-height: 6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .business-directory__eyebrow {
+    font-size: max(1.2rem, 11px);
+  }
+
+  /* 行間。基本の 1.25 は明朝の日本語には詰まりすぎで、2行になったとき
+     1行目の上端が 2px 切れる（実測 scrollHeight 58 / clientHeight 56）。
+     字面の外へ出るぶんを行間で受ける。 */
+  .business-directory__title {
+    font-size: 2.3rem;
+    line-height: 1.45;
+    letter-spacing: 0.08em;
+  }
+
+  .business-directory__masthead {
+    margin: 1.2rem 0 1.4rem;
+  }
+  /* 「お店を掲載したい方へ」は本の下の申し込み区画にも同じ入口がある。
+     狭い画面では上の重複を畳んで、その分を本編へ回す。 */
+  .business-directory__apply {
+    display: none;
+  }
+
+  .business-directory__lead {
+    font-size: max(1.8rem, 17px);
+    line-height: 1.45;
+  }
+
+  .business-directory__intro {
+    margin-top: 1rem;
+    font-size: max(1.4rem, 13px);
+    line-height: 1.9;
+  }
+
+  .business-filters__toggle {
+    min-height: 5.5rem;
+    padding: 0 1.5rem;
+    font-size: max(1.4rem, 13px);
+  }
+
+  .business-filters {
+    top: 8.7rem;
+    right: 1.8rem;
+    left: 1.8rem;
+    padding: 2rem;
+  }
+
+  .business-filters__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-directory__count {
+    top: 17.8rem;
+    left: 4rem;
+  }
+
+  .business-book-stage {
+    min-height: auto;
+  }
+
+  .business-book {
+    filter: drop-shadow(0 0.9rem 0.8rem rgba(20, 31, 24, 0.18));
+  }
+
+  .business-directory__grid {
+    perspective: 95rem;
+  }
+
+  /* 一面ずつ読む版でも本であることは変わらない。綴じは左、小口は右。
+     見開きのように中央で割れるのではなく、左の背から紙が起きる本にする。 */
+  .business-book__cover {
+    top: -0.7rem;
+    right: -0.9rem;
+    bottom: -1rem;
+    left: -1.9rem;
+  }
+
+  .business-book__cover::before {
+    inset: 0.3rem 0.3rem 0.3rem 1.5rem;
+  }
+
+  /* 背表紙の布と、かがり糸の点線。 */
+  .business-book__cover::after {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1.9rem;
+    background:
+      repeating-linear-gradient(180deg, rgba(201, 176, 106, 0.5) 0 0.5rem, rgba(201, 176, 106, 0) 0.5rem 1.1rem) 1.1rem 0 / 1px 100% no-repeat,
+      linear-gradient(90deg, #0d2e22 0%, #16412f 55%, #0b2a1e 100%);
+    transform: none;
+  }
+
+  /* 小口は右だけ。左は綴じているので紙の端は出ない。 */
+  .business-book__leaves {
+    inset: 0.35rem -0.75rem 0.35rem 0;
+  }
+
+  .business-book__leaves::before {
+    display: none;
+  }
+
+  .business-book__leaves::after {
+    width: 0.75rem;
+  }
+
+  /* のどは中央ではなく左端。紙が背に向かって沈む。 */
+  .business-book__gutter {
+    left: 0;
+    width: 4.8rem;
+    background:
+      linear-gradient(90deg, rgba(30, 24, 12, 0.4) 0%, rgba(34, 27, 13, 0.2) 26%, rgba(40, 32, 16, 0.07) 58%, rgba(40, 32, 16, 0) 100%);
+    transform: none;
+  }
+
+  /* 紙の丈は中身に合わせる。画面の高さで決め打ちすると、背の低い端末で
+     中身が入りきらず、flex の子が一斉に縮んで文字が行の途中で切れる。
+     写真は縦横比で持ち、本文の段は必要なだけ伸ばす。 */
+  .business-card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    box-shadow: 0.45rem 0.55rem 0 rgba(35, 39, 31, 0.14);
+  }
+
+  /* 紙目は小さい面ほど粗く見えるので、粒の周期を詰める。 */
+  .business-card::after {
+    background-size: 12rem 12rem;
+  }
+
+  /* 小口側の一枚は、下の束からわずかに浮いている。その縁の影。 */
+  .business-card::before {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2.4rem;
+    background: linear-gradient(270deg, rgba(24, 19, 9, 0.18) 0%, rgba(24, 19, 9, 0.05) 45%, rgba(24, 19, 9, 0) 100%);
+    content: "";
+    pointer-events: none;
+  }
+
+  /* 上下に積む版では、のど側の反りが起きない。 */
+  .business-card__figure::after,
+  .business-card__body::before {
+    display: none;
+  }
+
+  /* めくる紙の複製も本体と同じ組み方にする。行の取り方がずれると、
+     めくった瞬間に写真と本文の境目が跳ぶ。 */
+  .business-page-turn__card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    height: 100%;
+  }
+
+  /* 丈が足りない場面でも、行の途中では切らない。縮むのは本文の段だけにする。 */
+  .business-card__body > * {
+    flex-shrink: 0;
+  }
+
+  .business-card__prose {
+    flex-shrink: 1;
+    min-height: 0;
+  }
+
+  .business-card__figure,
+  .business-card__figure img,
+  .business-card__figure--plate .business-card__plate {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* 写真の段だけは丈を縦横比で決める。ここが伸び縮みすると本文も動く。 */
+  /* 写真の丈。4/3 だと 338px 幅で 254px を占め、カードの3分の1が写真になり、
+     1画面に読みものが収まらない。横長にして、店の様子は伝わる範囲で詰める。 */
+  /* 写真の束。主画像を主役に保ちたいので、小さいほうは低く抑える。
+     1画面に収める約束があるので、ここで増える高さは下の要約と本文から出す。 */
+  .business-card__shots {
+    gap: 0.5rem;
+    margin-bottom: 0.7rem;
+  }
+
+  /* 小さいほうは丈を決め打ちする。比率で持たせると、幅の広い端末ほど背が高く
+     なって1画面から押し出される。主役は上の主画像。 */
+  .business-card__shot img {
+    height: 4.6rem;
+    min-height: 42px;
+  }
+
+  /* 写真の丈。1画面に1件を収めるための上限つきで、できるだけ大きく取る。
+     ここを増やすなら、下の本文の行数を減らして原資を作ること（実測で
+     390x844 の帯は720px、いちばん背の高いカードで塊684px）。 */
+  .business-card__figure {
+    aspect-ratio: 1.35 / 1;
+  }
+
+  .business-card__figure img {
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+
+  .business-card__folio {
+    top: 1.2rem;
+    left: 1.2rem;
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .business-card__folio span {
+    font-size: 1.4rem;
+  }
+
+  .business-card__folio::after {
+    top: 0.8rem;
+    left: 5.3rem;
+    width: 7rem;
+    font-size: 0.7rem;
+    line-height: 1.35;
+    letter-spacing: 0.14em;
+  }
+
+  .business-card__badge {
+    right: 0.8rem;
+    bottom: 0.8rem;
+    padding: 0.45rem 0.7rem;
+    font-size: max(1.25rem, 11.5px);
+  }
+
+  .business-card__body {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: 1.1rem 1.6rem 1.2rem;
+    overflow: hidden;
+    background:
+      var(--biz-laid),
+      linear-gradient(180deg, #fffefa 0%, var(--biz-paper-strong) 62%, #f4efe1 100%);
+  }
+
+  /* 電話の文字寸法について。
+     common.min.css の root は `calc((10 / 400) * 100vw)` なので、幅 390px の
+     端末では 1rem = 9.75px。ここの指定はそのまま実寸になる。以前は本文 0.8rem
+     ＝7.8px、メタ 0.66rem＝6.4px と、紙面の収まりを優先して読めない大きさまで
+     詰めていた。カードは height:auto／grid-template-rows:auto auto で中身なりに
+     伸びるので、詰める理由がない。日本語の本文が読める下限（14px前後）を
+     基準に置き直す。数値を触るときは 390px の実機幅で必ず実寸を測ること。
+     基準は rem だが、下限だけ px で押さえてある。common.min.css の root は
+     幅の帯ごとに倍率が変わり、561px で 1rem=7.31px まで落ちる崖がある。
+     rem だけで書くと、その帯だけ本文が 11px になって読めなくなる。
+     （page-home.css も同じ理由で 16px の下限を置いている）
+     */
+  .business-card__name {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    line-height: 1.14;
+  }
+
+  .business-card__owner {
+    margin-top: 0.5rem;
+    font-size: max(1.45rem, 13.5px);
+    line-height: 1.5;
+  }
+
+  .business-card__graduation,
+  .business-card__meta {
+    margin-top: 0.5rem;
+    padding-block: 0.5rem;
+    font-size: max(1.3rem, 12.5px);
+    line-height: 1.5;
+  }
+
+  .business-card__quote {
+    margin-top: 0.8rem;
+    font-size: clamp(1.55rem, 4.6vw, 2rem);
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+  }
+
+  .business-card__graduation + .business-card__quote {
+    margin-top: 0.6rem;
+  }
+
+  .business-card__summary {
+    display: -webkit-box;
+    margin-top: 0.7rem;
+    overflow: hidden;
+    font-size: max(1.45rem, 13.5px);
+    line-height: 1.65;
+    -webkit-box-orient: vertical;
+    /* 写真を主役にしたぶん、読みものは要点だけ。全文は「お店を訪ねる」で開く。 */
+    -webkit-line-clamp: 1;
+  }
+
+  /* 本文は行数で頭打ちにする。伸ばし放題にすると「お店を訪ねる」が紙の外へ
+     押し出される。行数で切れば末尾に三点リーダが出るので、切れ目が
+     不具合ではなく「続きがある」と読める。
+     行数の制限は段落そのものに掛ける。包む div は flex アイテムなので
+     -webkit-box が block に変換され、行数指定が効かない。 */
+  /* 前面では本文を出さない。写真に場所を渡し、文章は「お店を訪ねる」を開いた
+     ときに全文を出す。DOM からは抜かないので、読み上げとページ内検索には残る。 */
+  .business-card__prose {
+    display: none;
+    margin-top: 0.5rem;
+    overflow: hidden;
+  }
+
+  .business-card__prose p {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: max(1.5rem, 14px);
+    line-height: 1.85;
+    text-align: left;
+    -webkit-box-orient: vertical;
+    /* 1段落1行まで。上の要約が2行で概要を持っているので、前面は書き出しだけ
+       見せ、続きは「お店を訪ねる」で開く。行数で切ると末尾に三点リーダが出る
+       ので、切れ目が不具合ではなく「続きがある」と読める。
+       ここを増やすと、そのぶん写真を小さくすることになる（1画面に収める）。 */
+    -webkit-line-clamp: 1;
+  }
+
+  /* 2段落目は写真の束に場所を譲る。DOM からは抜かない（読み上げと
+     ページ内検索には残る）。全文は「お店を訪ねる」で開く。 */
+  .business-card__prose p + p {
+    display: none;
+    margin-top: 0.5rem;
+    text-indent: 0;
+  }
+
+  .business-card__discount {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.5rem;
+    padding: 0.35rem 0.3rem 0.35rem 0.8rem;
+    border-left-width: 0.35rem;
+  }
+
+  .business-card__discount-flag {
+    font-size: max(1.25rem, 12px);
+    letter-spacing: 0.06em;
+  }
+
+  .business-card__discount-text {
+    font-size: max(1.4rem, 13px);
+    line-height: 1.5;
+  }
+
+  .business-card__detail {
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  .business-card__detail summary {
+    min-height: 5.5rem;
+    padding: 0 3.1rem 0 1rem;
+    font-size: max(1.6rem, 15px);
+    letter-spacing: 0.04em;
+  }
+
+  .business-card__detail summary::after {
+    right: 1rem;
+    width: 1.7rem;
+    height: 1.3rem;
+  }
+
+  .business-card__detail > p {
+    margin-top: 0.8rem;
+    padding: 0.9rem;
+    font-size: max(1.45rem, 13.5px);
+    line-height: 1.8;
+  }
+
+  /* 開いたときは覆わない。以前はカード全面をこの段で覆っていたので、前面で
+     切っていた要約や本文は下に隠れたままで、どこからも読めなかった。
+     紙を伸ばして、切っていた文字ごと出す。読むあいだはページが伸びてよい
+     （1画面に収める約束は、閉じた状態＝一覧としての見え方に掛かっている）。 */
+  .business-card__detail[open] {
+    position: static;
+    display: block;
+    padding: 0;
+    background: none;
+  }
+
+  .business-card__detail[open] summary {
+    margin-top: 0;
+  }
+
+  .business-card__detail[open] > p {
+    margin: 0.8rem 0 0;
+    overflow-y: visible;
+  }
+
+  /* 開いているあいだは、前面で切っていた文字を全部出す。
+     :has() が無い環境では前面のまま（切れた状態）になるが、読めなくなる
+     わけではない——下の段の文章はいつでも開ける。 */
+  .business-card:has(.business-card__detail[open]),
+  .business-card:has(.business-card__detail[open]) .business-card__body {
+    overflow: visible;
+  }
+
+  .business-card:has(.business-card__detail[open]) .business-card__summary {
+    display: block;
+  }
+
+  .business-card:has(.business-card__detail[open]) .business-card__prose {
+    display: block;
+  }
+
+  .business-card:has(.business-card__detail[open]) .business-card__prose p,
+  .business-card:has(.business-card__detail[open]) .business-card__prose p + p {
+    display: block;
+  }
+
+  .business-card__figure--plate .business-card__plate {
+    padding: 1.4rem;
+    border-width: 0.5rem;
+    outline-offset: -0.5rem;
+  }
+
+  .business-card__plate-name {
+    font-size: 1.35rem;
+  }
+
+  .business-card__plate-note {
+    font-size: max(1.3rem, 12px);
+  }
+
+  .business-book-nav {
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    margin-top: 1.8rem;
+  }
+
+  .business-book-nav__button {
+    min-height: 5.5rem;
+    padding: 0 1.2rem;
+    font-size: max(1.45rem, 13.5px);
+  }
+
+  .business-book-nav__button::after {
+    display: none;
+  }
+  /* 上の指定に無かった小さい字。390px 実機で 8.8〜11.7px だったものを、
+     役割ごとの下限まで引き上げる。下限を px で押さえる理由は上のコメント参照。 */
+  .business-directory__count,
+  .business-directory__count-total {
+    font-size: max(1.35rem, 12.5px);
+  }
+
+  .business-side-book__label {
+    font-size: max(1.3rem, 12px);
+  }
+
+  .business-side-book__name {
+    font-size: max(1.25rem, 11.5px);
+  }
+
+  .business-filters__reset {
+    font-size: max(1.4rem, 13px);
+  }
+
+  .business-filters__field span {
+    font-size: max(1.35rem, 12.5px);
+  }
+
+}
+
+@media screen and (max-width: 479px) {
+  /* 折り返す幅。18rem だと「卒業生事業・店 / 舗紹介」と店舗が2行に割れる。
+     意味の切れ目（中黒のうしろ）で折り返させる。15〜17rem がその範囲で、
+     広げすぎると「卒業生事業・店舗 / 紹介」に戻る。 */
+  .business-directory__title {
+    max-width: 16rem;
+  }
+
+  .business-filters__fields {
+    grid-template-columns: 1fr;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+
+  /* 479px 以下でも、読める下限は変えない。ここで詰めると 390px の端末（iPhone の
+     標準的な幅）がまるごとその指定に入り、上の 767px ブロックで整えた寸法が
+     効かなくなる。幅が足りないぶんは字を小さくするのではなく、下の行数で吸収する。 */
+  .business-card__name {
+    font-size: clamp(1.9rem, 5.6vw, 2.3rem);
+  }
+
+  .business-card__quote {
+    font-size: clamp(1.5rem, 4.3vw, 1.85rem);
+  }
+
+
+  .business-book-nav__position {
+    min-width: 4.8rem;
+    font-size: 1.3rem;
+  }
+}
+
+/* 縦の短い端末（iPhone SE の 667px など）。1件を1画面で読み切らせるための
+   最後の調整。ここでも字は小さくしない——読めない字を1画面に並べても意味がない。
+   減らすのは写真の丈と本文の行数だけ。紙の丈そのものを画面の高さで決め打ちする
+   （svh で頭を押さえる）と、本文が行の途中で切れる。それは以前やって戻した。 */
+@media screen and (max-width: 767px) and (max-height: 700px) {
+  /* 上端は削らない。ここを詰めると見出しが固定ヘッダーの帯（下端68px）へ
+     入り、少し送っただけで1行目が裏へ消える。短い画面でも帯の下は空ける。 */
+  .business-directory {
+    padding-top: 7.2rem;
+  }
+
+  /* 縦の短い端末では写真を大きくする余地がない。帯そのものが 548px しかなく、
+     ここを 2.1/1 まで起こすと最悪のカードで37px あふれた（実測）。
+     1画面に収めるほうを優先して、横長のまま置く。 */
+  .business-card__figure {
+    aspect-ratio: 2.5 / 1;
+  }
+
+  .business-card__prose p {
+    -webkit-line-clamp: 1;
+  }
+
+  /* 紙と送りをひとつの塊として帯へ入れるので、あいだの余白と操作部の丈も詰める。
+     押せる高さは 44px を下回らせない（指で押す最小） */
+  .business-book-nav {
+    margin-top: 0.9rem;
+  }
+
+  .business-book-nav__button {
+    min-height: 4.7rem;
+  }
+
+  .business-card__body {
+    padding-bottom: 0.9rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   移植にあたって足した2段。
+   本文の外側に置く注記なので、紙（.business-card）の意匠には触れない。
+   -------------------------------------------------------------------------- */
+
+.business-directory__hint {
+  margin: 3.2rem 0 0;
+  color: var(--biz-ink-soft);
+  font-size: 1.2rem;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+}
+
+.business-directory__note {
+  margin: 0.8rem 0 0;
+  padding-top: 0.8rem;
+  border-top: var(--biz-hairline);
+  color: var(--biz-ink-soft);
+  font-size: 1.2rem;
+  line-height: 1.9;
+}
+
+/* 狭い画面の上端。移植元は下端68px の固定ヘッダー帯に合わせて 7.2rem だったが、
+   こちらのロゴ板は SP で下端85px まであり、7.2rem だと見出し上の
+   「ALUMNI BUSINESS」がロゴ板の裏へ潜る（実測で13px 重なった）。
+   板の下端＋余白ぶんを空ける。この節はファイル末尾に置いてあるので、
+   上の 767px / 短い画面の指定より後に効く。 */
+@media screen and (max-width: 767px) {
+  .business-directory {
+    padding-top: calc(var(--header-h-mini) + 3rem);
+  }
+}

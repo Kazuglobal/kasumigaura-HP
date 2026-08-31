@@ -28,6 +28,7 @@ export const navPc: readonly NavItem[] = [
   { label: '会報・お知らせ', href: '#news' },
   { label: 'ギャラリー', href: '#gallery' },
   { label: '卒業生紹介', href: '/stories' },
+  { label: '事業・店舗紹介', href: '/business' },
 ] as const
 
 export const navLabels = {

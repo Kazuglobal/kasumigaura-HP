@@ -9,6 +9,7 @@
     "lint": "eslint",
     "shots": "node scripts/shots.mjs",
     "shots:stories": "node scripts/shots-stories.mjs",
+    "shots:business": "node scripts/shots-business.mjs",
     "images:stories": "node scripts/gen-story-placeholders.mjs"
   },
   "dependencies": {
