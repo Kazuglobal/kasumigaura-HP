@@ -1,10 +1,16 @@
 import { site } from '@/data/site'
 import { footerLabels, footerNav } from '@/data/footer'
+import { anchorHref } from '@/data/nav'
 import { PageTopButton } from './page-top-button'
 import styles from './footer.module.css'
 
 /** Reference #siteFooter: beige, text logo + SNS (omitted when empty), fNav, copyright, school link. */
-export function SiteFooter() {
+type Props = {
+  /** Sub pages rewrite the home-page anchors to `/#...`. */
+  isHome?: boolean
+}
+
+export function SiteFooter({ isHome = true }: Props = {}) {
   const year = new Date().getFullYear()
   return (
     <footer id="siteFooter" className={styles.footer}>
@@ -12,7 +18,7 @@ export function SiteFooter() {
       <div className={`${styles.inner} containerS`}>
         <div className={styles.top}>
           <p className={styles.logo}>
-            <a href="#" className="hoverFade">
+            <a href={anchorHref('#', isHome)} className="hoverFade">
               <span className={styles.logoJp}>{site.name}</span>
               <span className={styles.logoEn}>{site.nameEnLong}</span>
             </a>
@@ -34,7 +40,7 @@ export function SiteFooter() {
             <ul>
               {footerNav.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href}>{item.label}</a>
+                  <a href={anchorHref(item.href, isHome)}>{item.label}</a>
                 </li>
               ))}
             </ul>

@@ -3,6 +3,8 @@
 // (Ibaraki), soft natural light, colors that sit well with navy #005099 and beige #F5F3EC, no readable text,
 // no identifiable faces (people seen from behind, at a distance, or out of focus).
 
+import { STORY_ASSETS } from './story-prompts.mjs'
+
 const LANDSCAPE = 'landscape 1536x1024'
 const SQUARE = 'square 1024x1024'
 
@@ -198,4 +200,6 @@ export const ASSETS = [
     size: SQUARE,
     prompt: 'Flat vector-style illustration on a fully transparent background: an envelope with a speech bubble, two-tone navy blue (#005099) and light blue, minimal, centered, generous margins. Icon style, no text.',
   },
+  // ---- 卒業生紹介 (alumni stories) ------------------------------------
+  ...STORY_ASSETS,
 ]

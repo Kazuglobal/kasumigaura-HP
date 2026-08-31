@@ -27,6 +27,7 @@ export const navPc: readonly NavItem[] = [
   { label: '年間行事', href: '#events', mega: megaMenu },
   { label: '会報・お知らせ', href: '#news' },
   { label: 'ギャラリー', href: '#gallery' },
+  { label: '卒業生紹介', href: '/stories' },
 ] as const
 
 export const navLabels = {
@@ -34,3 +35,12 @@ export const navLabels = {
   closeMenu: 'メニューを閉じる',
   toTop: 'トップページ',
 } as const
+
+/**
+ * The nav is written against the one-page home, so its `#` targets only exist there. On a sub page
+ * (卒業生紹介 etc.) the same item has to point back at the home section instead of doing nothing.
+ */
+export const anchorHref = (href: string, isHome: boolean): string => {
+  if (isHome || !href.startsWith('#')) return href
+  return href === '#' ? '/' : `/${href}`
+}

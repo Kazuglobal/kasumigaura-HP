@@ -20,6 +20,8 @@ const WIDTHS = {
   photo: 1000,
   cta: 1400,
   card: 480,
+  // Book jackets and portraits are drawn into a canvas texture at ~512x768; 720px is plenty.
+  story: 720,
 }
 const DEFAULT_WIDTH = 1400
 
