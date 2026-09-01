@@ -20,3 +20,6 @@ docs/goals/*/.goalbuddy-board/
 
 # Claude Code session settings
 .claude/
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo

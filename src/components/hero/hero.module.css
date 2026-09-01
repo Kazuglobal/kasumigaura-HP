@@ -64,6 +64,63 @@
   z-index: 2;
 }
 
+
+/* A3: intro slideshow --------------------------------------------- */
+.introVisual {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: calc(100% - 200px);
+  overflow: hidden;
+  background: var(--c-bg2);
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity 1.2s ease,
+    transform 7s ease-out;
+}
+.slide:nth-child(1) {
+  background-image: url('/images/hero-intro.webp');
+}
+.slide:nth-child(2) {
+  background-image: url('/images/hero-pc-01.webp');
+}
+.slide:nth-child(3) {
+  background-image: url('/images/hero-pc-02.webp');
+}
+.slide:nth-child(4) {
+  background-image: url('/images/hero-pc-03.webp');
+}
+.slide:nth-child(5) {
+  background-image: url('/images/hero-pc-04.webp');
+}
+.slideActive {
+  opacity: 1;
+  transform: scale(1);
+}
+/* keeps the white catch copy legible over any slide */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(0, 30, 60, 0.62) 0%,
+      rgba(0, 30, 60, 0.38) 40%,
+      rgba(0, 30, 60, 0) 72%
+    ),
+    linear-gradient(to bottom, rgba(0, 30, 60, 0.3) 0%, rgba(0, 30, 60, 0) 22%);
+}
+
 /* catch copy (intro) ---------------------------------------------- */
 .mainCopy {
   position: absolute;
@@ -164,7 +221,43 @@
     transform: none;
   }
 
+
+  /* A3-SP: the portrait photos fill the whole first view ---------- */
+  .introVisual {
+    inset: 0;
+    width: auto;
+    height: auto;
+  }
+  .introVisual .wave {
+    display: none;
+  }
+  .slide:nth-child(1) {
+    background-image: url('/images/hero-sp-01.webp');
+  }
+  .slide:nth-child(2) {
+    background-image: url('/images/hero-sp-02.webp');
+  }
+  .slide:nth-child(3) {
+    background-image: url('/images/hero-sp-03.webp');
+  }
+  .slide:nth-child(4) {
+    background-image: url('/images/hero-sp-04.webp');
+  }
+  .slide:nth-child(5) {
+    display: none;
+  }
+  .scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 30, 60, 0.28) 0%,
+      rgba(0, 30, 60, 0.05) 30%,
+      rgba(0, 30, 60, 0.45) 68%,
+      rgba(0, 30, 60, 0.72) 100%
+    );
+  }
+
   .mainCopy {
+    z-index: 2;
     top: auto;
     bottom: 300px;
     left: 20px;

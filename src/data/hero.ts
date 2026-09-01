@@ -13,7 +13,13 @@ export const hero = {
   catchCopy: 'つながる、ひろがる、霞ヶ浦。',
   catchCopySpLines: ['つながる、ひろがる、', '霞ヶ浦。'],
   sub: '霞ヶ浦高等学校同窓会 公式サイト',
-  introImage: '/images/hero-intro.webp',
+  // The intro slide images themselves are declared in hero.module.css so that
+  // each breakpoint downloads only its own art direction:
+  //   PC: hero-intro.webp + hero-pc-01..04.webp (landscape, 5 slides)
+  //   SP: hero-sp-01..04.webp (portrait full-bleed, 4 slides)
+  introSlidesPc: 5,
+  introSlidesSp: 4,
+  introIntervalMs: 5000,
   buttonLabel: '詳しく見る',
   closeLabel: '閉じる',
   prevLabel: '前へ',

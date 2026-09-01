@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { TransitionEvent } from 'react'
 import { hero, type HeroCard } from '@/data/hero'
 import { WaveDivider } from '@/components/motion/wave-divider'
+import { HeroIntroVisual } from './hero-intro-visual'
 import styles from './hero.module.css'
 
 const WAVE_HEIGHT = 5
@@ -20,7 +21,7 @@ function HeroImage({ src, priority = false }: { src: string; priority?: boolean 
 export function HeroIntro() {
   return (
     <figure className={`${styles.item} ${styles.intro}`}>
-      <HeroImage src={hero.introImage} priority />
+      <HeroIntroVisual />
       <figcaption className={styles.mainCopy}>
         <h1 className={styles.catch}>
           <span className={styles.catchPc}>{hero.catchCopy}</span>
