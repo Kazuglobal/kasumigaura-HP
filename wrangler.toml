@@ -1,0 +1,13 @@
+# Cloudflare Pages configuration.
+#
+# `next.config.ts` sets `output: 'export'`, so the whole site is written to `out/`.
+# `out/` is gitignored, so Pages MUST build it — serving the repository as-is
+# yields a 404 for `/` (there is no index.html to serve).
+#
+# This file pins the output directory. The build command itself still comes from
+# the Pages dashboard (Settings -> Build configuration) and must be set to:
+#   Build command: pnpm build
+#   NODE_VERSION:  22
+name = "kasumigaura-hp"
+pages_build_output_dir = "out"
+compatibility_date = "2026-09-02"
