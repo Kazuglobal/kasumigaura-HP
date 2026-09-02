@@ -3,6 +3,18 @@
   padding: calc(var(--header-h) + 50px) 20px 120px;
 }
 
+/* トップに置くときはヘッダー分の逃げが要らない（上にヒーローと他の節がある）。 */
+.homeSection {
+  padding: 0 20px;
+  margin-bottom: 12vw;
+}
+
+.homeBtn {
+  display: block;
+  margin-top: 44px;
+  text-align: center;
+}
+
 .inner {
   width: 100%;
   max-width: var(--w-container-m);

@@ -74,6 +74,21 @@ export const businessSection = {
   backLabel: '卒業生事業・店舗紹介へ戻る',
 } as const
 
+/**
+ * トップページの抜粋。全9件のうち、地域と業種が重ならない3件を出す。
+ * ここを増やすとトップが事業紹介のページになってしまうので、3件のまま。
+ */
+export const businessHomeSlugs = ['cafe-amino', 'kasumi-motors', 'kasumi-design'] as const
+
+export const businessHome = {
+  id: 'business',
+  en: 'Alumni Business',
+  jp: '卒業生事業・店舗紹介',
+  lead: ['この町で働く、', 'あの人を訪ねて。'],
+  intro: '卒業生が営むお店や事業を、1件1見開きの記念誌として読めるページにまとめました。',
+  pickLabel: '掲載の一部',
+} as const
+
 export const businessNote =
   '※ 掲載している屋号・氏名・卒業期・割引・写真はすべてダミーです [要確認 取材・掲載許諾]。'
 
@@ -377,3 +392,13 @@ export const businesses: readonly Business[] = [
       '郷土資料と写真集を厚めに揃え、取り寄せも当日受付。月末の読書会は同窓会員なら申し込み不要で参加できます。',
   },
 ]
+
+/**
+ * `businessHomeSlugs` の並び順で引く。存在しない slug は落とすのではなく気付けるよう、
+ * ここで例外にする（トップから1件消えるより、ビルドで止まるほうがよい）。
+ */
+export const homeBusinesses: readonly Business[] = businessHomeSlugs.map((slug) => {
+  const found = businesses.find((entry) => entry.slug === slug)
+  if (!found) throw new Error(`businessHomeSlugs: unknown slug "${slug}"`)
+  return found
+})
