@@ -10,8 +10,8 @@ export type HeroCard = {
 }
 
 export const hero = {
-  catchCopy: 'つながる、ひろがる、霞ヶ浦。',
-  catchCopySpLines: ['つながる、ひろがる、', '霞ヶ浦。'],
+  catchCopy: '母校は、いつでもここにある。',
+  catchCopySpLines: ['母校は、', 'いつでもここにある。'],
   sub: '霞ヶ浦高等学校同窓会 公式サイト',
   // The intro slide images themselves are declared in hero.module.css so that
   // each breakpoint downloads only its own art direction:
