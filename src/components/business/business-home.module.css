@@ -1,0 +1,196 @@
+/* トップの卒業生事業・店舗紹介（抜粋3件）。/business の記念誌の体裁は持ち込まない。 */
+.section {
+  position: relative;
+  padding: 0 20px;
+  margin-bottom: 12vw;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--w-container-m);
+  margin-inline: auto;
+}
+
+.lead {
+  margin-top: 34px;
+  font-size: 2.4rem;
+  font-weight: bold;
+  line-height: 1.8;
+  text-align: center;
+  color: var(--c-primary);
+}
+
+.leadLine {
+  display: inline-block;
+}
+
+.intro {
+  margin-top: 16px;
+  line-height: 2.1;
+  text-align: center;
+}
+
+.pick {
+  margin-top: 46px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 0.14em;
+  text-align: center;
+  color: var(--c-primary);
+}
+
+.pickCount {
+  font-weight: normal;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 22px;
+}
+
+.card {
+  position: relative;
+  display: block;
+  height: 100%;
+  padding: 0 22px 24px;
+  background: var(--c-bg2);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  transition:
+    transform 0.3s var(--ease-out-cubic),
+    box-shadow 0.3s var(--ease-out-cubic);
+}
+
+@media (any-hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 40, 80, 0.14);
+  }
+}
+
+.figure {
+  position: relative;
+  display: block;
+  width: calc(100% + 44px);
+  margin-left: -22px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--c-primary-l2);
+}
+
+.figure img {
+  object-fit: cover;
+}
+
+/* 写真がまだ無い店。屋号だけを紙面のように置く。 */
+.plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--c-white);
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--c-white);
+  background: rgba(0, 40, 80, 0.72);
+  border-radius: 4px;
+}
+
+/* 丁付け。記念誌のページ番号をトップにも残す。 */
+.folio {
+  display: block;
+  margin-top: 18px;
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.meta {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  color: var(--c-primary);
+}
+
+.name {
+  display: block;
+  margin-top: 6px;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.5;
+  color: var(--c-primary);
+}
+
+.owner {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.3rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.quote {
+  display: block;
+  margin-top: 12px;
+  font-size: 1.4rem;
+  line-height: 1.9;
+}
+
+/* 引用は2行で1つの声。折り返しではなく行として置く。 */
+.quoteLine {
+  display: block;
+}
+
+.discount {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 4px 12px;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--c-primary);
+  border: 1px solid var(--c-primary);
+  border-radius: 10em;
+}
+
+.btn {
+  display: block;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.note {
+  margin-top: 30px;
+  font-size: 1.3rem;
+  line-height: 1.9;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 767px) {
+  .lead {
+    font-size: 1.9rem;
+  }
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .btn {
+    margin-top: 40px;
+  }
+}

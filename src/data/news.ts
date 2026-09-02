@@ -9,7 +9,8 @@ export type NewsItem = {
   readonly href: string
 }
 
-const img = (n: number): string => `/placeholder/news-${String(n).padStart(2, '0')}.svg`
+/** 5 generated photos reused cyclically across the 10 news cards. */
+const img = (n: number): string => `/images/news-${String(((n - 1) % 5) + 1).padStart(2, '0')}.webp`
 
 /** 10 cards for the News Swiper (D2). Dates and issue numbers are [要確認]. */
 export const newsItems: readonly NewsItem[] = [

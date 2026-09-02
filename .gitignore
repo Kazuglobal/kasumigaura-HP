@@ -17,3 +17,9 @@ shots/
 # reference-site screenshots (copyright) and generated board
 docs/goals/*/notes/ref/
 docs/goals/*/.goalbuddy-board/
+
+# Claude Code session settings
+.claude/
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo

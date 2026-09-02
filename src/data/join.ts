@@ -14,7 +14,7 @@ export const joinCta: CtaBanner = {
   title: '入会・会費・住所変更のご案内',
   sub: '年会費 [要確認] / お手続きは事務局まで',
   href: '#contact',
-  image: '/placeholder/cta.svg',
+  image: '/images/cta.webp',
 } as const
 
 const extraIds: readonly Banner['id'][] = ['address', 'donation']
@@ -24,7 +24,7 @@ const toCta = (b: Banner): CtaBanner => ({
   title: b.title,
   sub: b.sub,
   href: b.href,
-  image: '/placeholder/cta.svg',
+  image: '/images/cta.webp',
 })
 
 /** SP Swiper (D4) shows the CTA plus two internal banners. */

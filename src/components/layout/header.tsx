@@ -1,8 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { site } from '@/data/site'
-import { navLabels } from '@/data/nav'
+import { anchorHref, navLabels } from '@/data/nav'
 import { useIsSp } from '@/hooks/use-is-sp'
 import { useBodyClass } from '@/hooks/use-body-class'
 import { GlobalNav } from './global-nav'
@@ -29,6 +30,7 @@ export function Header() {
   const headerRef = useRef<HTMLElement>(null)
   const [open, setOpen] = useState(false)
   const isSp = useIsSp()
+  const isHome = usePathname() === '/'
   const navOpen = open && isSp !== false
 
   useBodyClass('is-navOpen', navOpen, true)
@@ -55,7 +57,7 @@ export function Header() {
   return (
     <header id="siteHeader" ref={headerRef} className={styles.header}>
       <div id="siteLogo" className={styles.logo}>
-        <a href="#" className="hoverFade" aria-label={navLabels.toTop} onClick={close}>
+        <a href={anchorHref('#', isHome)} className="hoverFade" aria-label={navLabels.toTop} onClick={close}>
           <span className={styles.logoJp}>{site.name}</span>
           <span className={styles.logoEn}>{site.nameEn}</span>
         </a>
@@ -78,7 +80,7 @@ export function Header() {
       <div id="js-gNavBg" className={styles.navBg} onClick={close} aria-hidden="true" />
 
       <div id="gNavWrapper" className={styles.navWrapper}>
-        <GlobalNav onNavigate={close} />
+        <GlobalNav onNavigate={close} isHome={isHome} />
         <HeaderRight />
       </div>
     </header>

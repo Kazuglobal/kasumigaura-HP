@@ -1,0 +1,296 @@
+.section {
+  /* The site header is fixed (--header-h); a sub page has no hero to sit under it. */
+  padding: calc(var(--header-h) + 50px) 20px 120px;
+}
+
+/* トップに置くときはヘッダー分の逃げが要らない（上にヒーローと他の節がある）。 */
+.homeSection {
+  padding: 0 20px;
+  margin-bottom: 12vw;
+}
+
+.homeBtn {
+  display: block;
+  margin-top: 44px;
+  text-align: center;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--w-container-m);
+  margin-inline: auto;
+}
+
+.lead {
+  margin-top: 34px;
+  text-align: center;
+  line-height: 2.1;
+}
+
+.leadLine {
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------------
+   3D shelf. Occupies no space until it is actually running, so a browser
+   that cannot run it shows the list with no gap above it.
+------------------------------------------------------------------ */
+.stage {
+  position: relative;
+  height: 0;
+  margin-top: 0;
+  overflow: hidden;
+}
+
+.stageReady {
+  height: min(52vh, 460px);
+  margin-top: 40px;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline-offset: 4px;
+  touch-action: pan-y;
+}
+
+.shelfStatus {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: var(--c-primary);
+}
+
+/* ------------------------------------------------------------------
+   The list. This is the feature; the shelf is a way into it.
+------------------------------------------------------------------ */
+.listHead {
+  margin-top: 56px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: var(--c-primary);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.card {
+  display: block;
+  height: 100%;
+  padding-bottom: 22px;
+  background: var(--c-bg2);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  transition:
+    transform 0.3s var(--ease-out-cubic),
+    box-shadow 0.3s var(--ease-out-cubic);
+}
+
+@media (any-hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 80, 153, 0.18);
+  }
+}
+
+.thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: var(--c-primary-l3);
+}
+
+.thumb img {
+  object-fit: cover;
+}
+
+.no {
+  display: block;
+  margin: 18px 22px 0;
+  font-family: var(--font-en), sans-serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  color: var(--c-primary);
+}
+
+.name {
+  display: block;
+  margin: 6px 22px 0;
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+}
+
+.role {
+  display: block;
+  margin: 4px 22px 0;
+  font-size: 1.4rem;
+  color: var(--c-primary);
+}
+
+.quote {
+  display: block;
+  margin: 12px 22px 0;
+  font-size: 1.4rem;
+  line-height: 1.9;
+}
+
+.note {
+  margin-top: 34px;
+  font-size: 1.3rem;
+  line-height: 1.9;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* ------------------------------------------------------------------
+   Detail page
+------------------------------------------------------------------ */
+.detail {
+  padding: calc(var(--header-h) + 40px) 20px 110px;
+}
+
+.crumbs {
+  width: 100%;
+  max-width: var(--w-container-m);
+  margin: 0 auto 30px;
+  font-size: 1.3rem;
+  color: var(--c-primary);
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 50px;
+  align-items: start;
+}
+
+.portrait {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--c-primary-l3);
+}
+
+.portrait img {
+  object-fit: cover;
+}
+
+.meta div {
+  display: flex;
+  gap: 14px;
+}
+
+.meta dt {
+  flex: 0 0 8em;
+  color: var(--c-primary);
+}
+
+.meta {
+  margin-top: 16px;
+  font-size: 1.3rem;
+  line-height: 2;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.detailNo {
+  font-family: var(--font-en), sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  color: var(--c-primary);
+}
+
+.detailName {
+  margin-top: 10px;
+  font-size: 3.2rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+}
+
+.detailKana {
+  margin-top: 4px;
+  font-family: var(--font-en), sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  color: var(--c-primary);
+}
+
+.detailRole {
+  margin-top: 14px;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: var(--c-primary);
+}
+
+.detailQuote {
+  margin-top: 26px;
+  padding: 22px 26px;
+  font-size: 1.8rem;
+  line-height: 1.9;
+  background: var(--c-bg2);
+  border-left: 4px solid var(--c-primary);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
+
+.detailBody p {
+  margin-top: 24px;
+  line-height: 2.2;
+}
+
+.detailFoot {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: calc(var(--header-h-mini) + 30px) 20px 90px;
+  }
+
+  .detail {
+    padding: calc(var(--header-h-mini) + 24px) 20px 80px;
+  }
+
+  .meta dt {
+    flex: 0 0 7em;
+  }
+
+  .stageReady {
+    height: min(58vh, 420px);
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .spread {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .detailName {
+    font-size: 2.4rem;
+  }
+
+  .detailQuote {
+    font-size: 1.6rem;
+  }
+}

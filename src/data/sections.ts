@@ -38,7 +38,7 @@ export const aboutSection = {
   ],
   button: '同窓会について',
   buttonHref: '#about',
-  image: '/placeholder/about.svg',
+  image: '/images/about.webp',
 } as const satisfies SectionCopy & { image: string }
 
 export const historySection = {
@@ -53,10 +53,10 @@ export const historySection = {
   button: '沿革を見る',
   buttonHref: '#history',
   images: {
-    img01: '/placeholder/history-01.svg',
-    img02: '/placeholder/history-02.svg',
-    img03: '/placeholder/history-03.svg',
-    img04: '/placeholder/history-04.svg',
+    img01: '/images/history-01.webp',
+    img02: '/images/history-02.webp',
+    img03: '/images/history-03.webp',
+    img04: '/images/history-04.webp',
   },
   /** C2: GSAP scrub parallax y ranges (px). */
   parallax: {
@@ -78,14 +78,14 @@ export const gallerySection = {
   modalTitle: 'フォトギャラリー',
   closeLabel: '閉じる',
   photos: [
-    { id: 'photo-01', src: '/placeholder/photo-01.svg', caption: '校舎 [要確認 写真]' },
-    { id: 'photo-02', src: '/placeholder/photo-02.svg', caption: '体育祭 [要確認 写真]' },
-    { id: 'photo-03', src: '/placeholder/photo-03.svg', caption: '文化祭 [要確認 写真]' },
-    { id: 'photo-04', src: '/placeholder/photo-04.svg', caption: '部活動 [要確認 写真]' },
-    { id: 'photo-05', src: '/placeholder/photo-05.svg', caption: '卒業式 [要確認 写真]' },
-    { id: 'photo-06', src: '/placeholder/photo-06.svg', caption: '同窓会総会 [要確認 写真]' },
+    { id: 'photo-01', src: '/images/photo-01.webp', caption: '校舎 [要確認 写真]' },
+    { id: 'photo-02', src: '/images/photo-02.webp', caption: '体育祭 [要確認 写真]' },
+    { id: 'photo-03', src: '/images/photo-03.webp', caption: '文化祭 [要確認 写真]' },
+    { id: 'photo-04', src: '/images/photo-04.webp', caption: '部活動 [要確認 写真]' },
+    { id: 'photo-05', src: '/images/photo-05.webp', caption: '卒業式 [要確認 写真]' },
+    { id: 'photo-06', src: '/images/photo-06.webp', caption: '同窓会総会 [要確認 写真]' },
   ],
-  background: '/placeholder/gallery.svg',
+  background: '/images/gallery.webp',
   button: 'ギャラリーへ',
   buttonHref: '#gallery',
 } as const

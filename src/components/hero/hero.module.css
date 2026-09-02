@@ -64,13 +64,82 @@
   z-index: 2;
 }
 
+
+/* A3: intro slideshow --------------------------------------------- */
+.introVisual {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: calc(100% - 200px);
+  overflow: hidden;
+  background: var(--c-bg2);
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity 1.2s ease,
+    transform 7s ease-out;
+}
+.slide:nth-child(1) {
+  background-image: url('/images/hero-intro.webp');
+}
+.slide:nth-child(2) {
+  background-image: url('/images/hero-pc-01.webp');
+}
+.slide:nth-child(3) {
+  background-image: url('/images/hero-pc-02.webp');
+}
+.slide:nth-child(4) {
+  background-image: url('/images/hero-pc-03.webp');
+}
+.slide:nth-child(5) {
+  background-image: url('/images/hero-pc-04.webp');
+}
+.slideActive {
+  opacity: 1;
+  transform: scale(1);
+}
+/* keeps the white catch copy legible over any slide */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(0, 30, 60, 0.62) 0%,
+      rgba(0, 30, 60, 0.38) 40%,
+      rgba(0, 30, 60, 0) 72%
+    ),
+    linear-gradient(to bottom, rgba(0, 30, 60, 0.3) 0%, rgba(0, 30, 60, 0) 22%);
+}
+
 /* catch copy (intro) ---------------------------------------------- */
+/*
+ * ど真ん中には置かない。横はラインナップのカード列と同じ基準（max-width の器 +
+ * 左右 20px）に合わせ、縦は上三分の一に置く。位置を左 % で決めるとカード列の
+ * 左端と揃わないので、器そのものを使って揃える。
+ *
+ * 上に寄せるのは構図の都合でもある。5枚のスライドはどれも空か湖が上帯に入る一方、
+ * 下半分は屋根や校舎で細かい。白抜きの見出しが最も安定して読めるのは上帯で、
+ * スクリムもそこが濃い。
+ */
 .mainCopy {
   position: absolute;
-  top: 31.5%;
-  left: 11.7%;
-  width: 31.25%;
-  min-width: 420px;
+  top: 24%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: var(--w-container-m);
+  margin-inline: auto;
+  padding: 0 20px;
   color: var(--c-white);
 }
 .catch {
@@ -164,12 +233,52 @@
     transform: none;
   }
 
-  .mainCopy {
-    top: auto;
-    bottom: 300px;
-    left: 20px;
+
+  /* A3-SP: the portrait photos fill the whole first view ---------- */
+  .introVisual {
+    inset: 0;
     width: auto;
-    min-width: 0;
+    height: auto;
+  }
+  .introVisual .wave {
+    display: none;
+  }
+  .slide:nth-child(1) {
+    background-image: url('/images/hero-sp-01.webp');
+  }
+  .slide:nth-child(2) {
+    background-image: url('/images/hero-sp-02.webp');
+  }
+  .slide:nth-child(3) {
+    background-image: url('/images/hero-sp-03.webp');
+  }
+  .slide:nth-child(4) {
+    background-image: url('/images/hero-sp-04.webp');
+  }
+  .slide:nth-child(5) {
+    display: none;
+  }
+  .scrim {
+    /* 見出しが乗る 55〜80% を厚くする。白い校舎の屋根が来ても白抜きが読める。 */
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 30, 60, 0.28) 0%,
+      rgba(0, 30, 60, 0.05) 28%,
+      rgba(0, 30, 60, 0.52) 62%,
+      rgba(0, 30, 60, 0.68) 80%,
+      rgba(0, 30, 60, 0.78) 100%
+    );
+  }
+
+  /*
+   * SP は逆に下三分の一へ。縦位置の写真は上に情景、下に地面が来るうえ、
+   * スクリムも下ほど濃い。左端はカード列の左端（swiperWrap の 28px）に合わせる。
+   */
+  .mainCopy {
+    z-index: 2;
+    top: auto;
+    bottom: 215px;
+    padding: 0 28px;
   }
   .catch {
     font-size: 3.2rem;
