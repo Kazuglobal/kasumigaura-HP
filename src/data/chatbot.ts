@@ -67,8 +67,8 @@ const KNOWLEDGE_BASE: KnowledgeEntry[] = [
     response: () => ({
       text: '【ご住所・ご連絡先の変更について】\n\nご転居や改姓、ご連絡先（電話番号・メールアドレス）の変更がございましたら、同窓会事務局までお知らせください。\n会報や重要なお知らせを確実にお届けできるよう、登録情報の更新を行わせていただきます。',
       actions: [
+        { label: '住所変更フォームを開く', href: '/address' },
         { label: '事務局へ連絡（お問い合わせ）', href: '#contact' },
-        { label: '入会・住所変更のご案内を見る', href: '#join' },
       ],
       options: [
         { id: 'opt-join-fee', label: '会費の納入方法について知りたい', query: '会費の納入方法' },
