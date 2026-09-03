@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Montserrat } from 'next/font/google'
 import { site } from '@/data/site'
+import { Chatbot } from '@/components/chatbot/chatbot'
 import '@/styles/globals.css'
 
 const montserrat = Montserrat({
@@ -20,7 +21,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ja" className={montserrat.variable}>
       <body className="home">
-        <div id="wrapper">{children}</div>
+        <div id="wrapper">
+          {children}
+          <Chatbot />
+        </div>
       </body>
     </html>
   )
