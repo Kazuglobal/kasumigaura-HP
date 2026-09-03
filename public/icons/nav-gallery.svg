@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- カメラ・ギャラリー -->
+  <path d="M42 34l6-10h24l6 10H94a8 8 0 0 1 8 8v46a8 8 0 0 1-8 8H26a8 8 0 0 1-8-8V42a8 8 0 0 1 8-8h16z"/>
+  <circle cx="60" cy="62" r="18"/>
+  <circle cx="60" cy="62" r="8"/>
+  <circle cx="86" cy="46" r="3"/>
+</svg>

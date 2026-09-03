@@ -37,7 +37,12 @@ export function GlobalNav({ onNavigate, isHome }: Props) {
         {navPc.map((item) => (
           <li key={item.href} className={item.mega ? styles.hasSub : undefined}>
             <a href={anchorHref(item.href, isHome)} className={styles.navLink} onClick={onNavigate}>
-              {item.label}
+              {item.icon && (
+                <span className={styles.navIcon} aria-hidden="true">
+                  <Image src={item.icon} alt="" width={24} height={24} unoptimized />
+                </span>
+              )}
+              <span className={styles.navLabelText}>{item.label}</span>
             </a>
             <MegaMenu item={item} onNavigate={onNavigate} isHome={isHome} />
           </li>

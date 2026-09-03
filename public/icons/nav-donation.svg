@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- ハートとサポートの手 -->
+  <path d="M60 42c-7-10-18-12-25-5-8 8-6 20 5 30l20 19 20-19c11-10 13-22 5-30-7-7-18-5-25 5z"/>
+  <!-- 両手で包むライン -->
+  <path d="M22 72c6 10 16 20 38 28 22-8 32-18 38-28"/>
+</svg>

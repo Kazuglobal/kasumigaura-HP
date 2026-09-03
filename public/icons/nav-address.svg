@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- マップピン・住所変更 -->
+  <path d="M60 22c-17 0-30 13-30 30 0 22 30 50 30 50s30-28 30-50c0-17-13-30-30-30z"/>
+  <circle cx="60" cy="52" r="10"/>
+  <!-- 〒マークまたは矢印 -->
+  <path d="M50 48h20M60 48v16"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- カレンダー -->
+  <rect x="24" y="32" width="72" height="64" rx="8"/>
+  <path d="M24 50h72"/>
+  <path d="M42 22v16"/>
+  <path d="M78 22v16"/>
+  <!-- 日付グリッド -->
+  <circle cx="42" cy="64" r="3"/>
+  <circle cx="60" cy="64" r="3"/>
+  <circle cx="78" cy="64" r="3"/>
+  <circle cx="42" cy="80" r="3"/>
+  <circle cx="60" cy="80" r="3"/>
+  <path d="M74 78l4 4 8-8"/>
+</svg>
