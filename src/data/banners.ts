@@ -11,7 +11,7 @@ export const banners: readonly Banner[] = [
   { id: 'bulletin', title: '会報 最新号', sub: '第[要確認]号 発行', href: '#news', tone: 'sky' },
   { id: 'join', title: '入会・会費のご案内', sub: '年会費 [要確認]', href: '#join', tone: 'beige' },
   { id: 'address', title: '住所変更のお届け', sub: '転居・改姓の際はこちら', href: '/address', tone: 'navy' },
-  { id: 'donation', title: '寄付・協賛のお願い', sub: '母校の活動を支える', href: '#join', tone: 'sky' },
+  { id: 'donation', title: '寄付・協賛のお願い', sub: '母校の活動を支える', href: '/donation', tone: 'sky' },
   { id: 'official', title: '霞ヶ浦高等学校 公式サイト', sub: '[要確認 URL]', href: '#', tone: 'beige' },
 ] as const
 

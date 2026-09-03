@@ -32,6 +32,7 @@ export const INITIAL_OPTIONS: ChatOption[] = [
   { id: 'opt-news', label: '📖 会報・最新ニュース', query: '会報について' },
   { id: 'opt-stories', label: '🎓 卒業生紹介 (Stories)', query: '卒業生紹介' },
   { id: 'opt-business', label: '🏢 事業・店舗紹介', query: '店舗・事業紹介' },
+  { id: 'opt-donation', label: '🎁 寄付・協賛のお願い', query: '寄付について' },
   { id: 'opt-gallery', label: '🏛️ 母校フォトギャラリー', query: 'ギャラリー' },
   { id: 'opt-contact', label: '✉️ 事務局へのお問い合わせ', query: '問い合わせ先' },
 ]
@@ -88,6 +89,21 @@ const KNOWLEDGE_BASE: KnowledgeEntry[] = [
       options: [
         { id: 'opt-address-change', label: '住所変更の手続きをしたい', query: '住所変更' },
         { id: 'opt-events-info', label: '同窓会行事について知りたい', query: '年間行事' },
+      ],
+    }),
+  },
+  {
+    id: 'donation',
+    keywords: ['寄付', '協賛', '寄附', '支援', '寄付金', 'カンパ', '支援金', '一口', 'スポンサー', '寄付したい'],
+    response: () => ({
+      text: '【寄付・協賛のお願い】\n\n霞ヶ浦高等学校同窓会では、母校の教育環境の充実や、全国大会等で活躍する部活動（レスリング部・野球部・ヨット部等）への活動支援、奨学支援のための寄付・協賛金を募っております。\n\n個人一口 5,000円より、Webフォームまたは直接の銀行振込にてお受け付けしております。',
+      actions: [
+        { label: '寄付・協賛ページを見る', href: '/donation' },
+        { label: '事務局へのお問い合わせ', href: '#contact' },
+      ],
+      options: [
+        { id: 'opt-don-form', label: 'Web寄付申し込み方法', query: '寄付の申し込み方法' },
+        { id: 'opt-don-fee', label: '通常の年会費について知りたい', query: '会費について' },
       ],
     }),
   },
