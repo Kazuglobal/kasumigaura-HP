@@ -10,13 +10,22 @@ export type HeroCard = {
 }
 
 export const hero = {
-  catchCopy: '母校は、いつでもここにある。',
-  catchCopySpLines: ['母校は、', 'いつでもここにある。'],
+  /*
+   * キャッチコピーは**文節**で切る。日本語を1文字ずつ動かすと字面が密なぶん
+   * 読めない賑やかさになるので、意味の切れ目でまとめて出す。
+   * PC は1行、SP は2行。行の分かれ方が違うだけで、文節は同じものを使う。
+   */
+  catchCopyPcLine: ['母校は、', 'いつでも', 'ここにある。'],
+  catchCopySpLines: [['母校は、'], ['いつでも', 'ここにある。']],
   sub: '霞ヶ浦高等学校同窓会 公式サイト',
   // The intro slide images themselves are declared in hero.module.css so that
   // each breakpoint downloads only its own art direction:
   //   PC: hero-intro.webp + hero-pc-01..04.webp (landscape, 5 slides)
   //   SP: hero-sp-01..04.webp (portrait full-bleed, 4 slides)
+  // ファーストビューの背景動画。remotion/ で書き出す（pnpm hero:video）。
+  // 文字は焼き込まない。見出しはこの上に HTML で重ねる。
+  videoPc: '/video/hero-pc.mp4',
+  videoSp: '/video/hero-sp.mp4',
   introSlidesPc: 5,
   introSlidesSp: 4,
   introIntervalMs: 5000,
