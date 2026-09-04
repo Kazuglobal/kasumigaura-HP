@@ -5,9 +5,17 @@
   position: relative;
 }
 
+/*
+ * 写真の高さ。クイックナビの帯までを1画面に収める。
+ *
+ * 帯を写真の外へ出したぶん、写真を 100svh のまま残すとカードが画面の下に
+ * はみ出して、せっかくのクイックナビが最初の画面から消える。帯の実測値
+ * （PC 252px / SP 185px = 余白 + カード）を引いた高さにする。
+ */
 .mainVisual {
+  --quick-nav-h: 252px;
   position: relative;
-  height: min(100svh, 825px);
+  height: min(calc(100svh - var(--quick-nav-h)), 700px);
   background: var(--c-bg2);
   overflow: hidden;
 }
@@ -42,7 +50,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 200px);
+  /* クイックナビが写真の外へ出たので、写真はファーストビューいっぱいに使う。 */
+  height: 100%;
   overflow: hidden;
   opacity: 0;
   transform: translateY(10px);
@@ -72,7 +81,7 @@
   left: 0;
   z-index: 0;
   width: 100%;
-  height: calc(100% - 200px);
+  height: 100%;
   overflow: hidden;
   background: var(--c-bg2);
 }
@@ -103,6 +112,20 @@
 .slide:nth-child(5) {
   background-image: url('/images/hero-pc-04.webp');
 }
+/*
+ * 背景動画。1枚目の写真の上にちょうど重なるので、読み込み中は下の写真が
+ * そのまま見えている（poster 属性を使わないのはこのため。アートディレクション
+ * 済みの写真がすでにそこにある）。
+ */
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 動画の1コマ目と下の写真は同じ絵なので、出入りに演出は要らない。 */
+}
+
 .slideActive {
   opacity: 1;
   transform: scale(1);
@@ -153,12 +176,70 @@
 .catchSp {
   display: none;
 }
+
+/*
+ * 文節ごとの下からのマスクリビール。0.2秒で出て、文節間は0.1秒ずらす。
+ * 外側でマスクし、内側を持ち上げる二重構造にするのは、マスクの縁が動かない
+ * ようにするため（1枚で translate + clip すると、切り口ごと動いて紙に見えない）。
+ *
+ * 読み終わるまでの時間は物理で決まる。14文字なので 0.4 + 14 x 0.06 = 1.24秒の
+ * 完全静止が要る。ファーストビューは以後動かないので条件は満たしている。
+ */
+.part {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.partInner {
+  display: inline-block;
+  transform: translateY(105%);
+  animation: partIn 0.6s var(--ease-signature) forwards;
+  animation-delay: calc(0.25s + var(--part) * 0.1s);
+}
+
+@keyframes partIn {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/*
+ * 行の分かれ方はデータ（catchCopySpLines）で決めている。行の中では折らない。
+ * 折れると設計した2行が3行になり、コピーの塊が崩れる。
+ */
+.catchSpLine {
+  display: block;
+  white-space: nowrap;
+}
+
 .catchSub {
   margin-top: 14px;
   font-size: 1.6rem;
   font-weight: bold;
   letter-spacing: 0.15em;
   text-shadow: 0 1px 8px rgba(0, 40, 80, 0.35);
+  opacity: 0;
+  /* 最後の文節が出きってから。 */
+  animation: subIn 0.7s var(--ease-signature) 0.85s forwards;
+}
+
+@keyframes subIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partInner,
+  .catchSub {
+    animation: none;
+  }
+  .partInner {
+    transform: none;
+  }
+  .catchSub {
+    opacity: 1;
+  }
 }
 
 /* B1: outline card ------------------------------------------------ */
@@ -170,7 +251,8 @@
   height: 100%;
   max-width: var(--w-container-m);
   margin: 0 auto;
-  padding: 0 20px 320px;
+  /* クイックナビが下へ出たぶん、よける必要がなくなった。 */
+  padding: 0 20px 140px;
   opacity: 0;
   transform: translateY(5px);
   transition:
@@ -221,11 +303,23 @@
 }
 
 /* ------------------------------------------------------------------
+   クイックナビの帯（写真の直下）
+------------------------------------------------------------------ */
+.quickNav {
+  position: relative;
+  z-index: 60;
+  padding: 40px 0 10px;
+  background: var(--c-bg2);
+}
+
+/* ------------------------------------------------------------------
    SP
 ------------------------------------------------------------------ */
 @media (max-width: 767px) {
+  .mainVisual {
+    --quick-nav-h: 185px;
+  }
   .img {
-    height: calc(100% - 185px);
     transform: translateX(10px);
   }
   .intro .img,
@@ -234,15 +328,11 @@
   }
 
 
-  /* A3-SP: the portrait photos fill the whole first view ---------- */
-  .introVisual {
-    inset: 0;
-    width: auto;
-    height: auto;
-  }
-  .introVisual .wave {
-    display: none;
-  }
+  /*
+   * A3-SP: 縦位置の写真に差し替える。箱の寸法は素の指定（全面）のままでよい。
+   * クイックナビを外へ出す前は、写真の高さを縮めていたぶんの打ち消しがここに
+   * 必要だった。
+   */
   .slide:nth-child(1) {
     background-image: url('/images/hero-sp-01.webp');
   }
@@ -277,11 +367,15 @@
   .mainCopy {
     z-index: 2;
     top: auto;
-    bottom: 215px;
+    bottom: 84px;
     padding: 0 28px;
   }
   .catch {
-    font-size: 3.2rem;
+    /*
+     * 行内を折らない代わりに、字の大きさを幅に従わせる。一番長い行は10文字なので
+     * 7.4vw だと 390px 幅で約318px、320px 幅でも約260px に収まる。
+     */
+    font-size: clamp(2.2rem, 7.4vw, 3.2rem);
     line-height: 1.6;
     white-space: normal;
   }
@@ -289,9 +383,6 @@
     display: none;
   }
   .catchSp {
-    display: block;
-  }
-  .catchSp span {
     display: block;
   }
   .catchSub {
