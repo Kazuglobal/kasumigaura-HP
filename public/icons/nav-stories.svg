@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 卒業帽・アカデミックキャップ -->
+  <path d="M60 28L16 48l44 20 44-20-44-20z"/>
+  <path d="M32 56v24c0 14 12 22 28 22s28-8 28-22V56"/>
+  <!-- タッセル・房飾り -->
+  <path d="M96 52v28"/>
+  <circle cx="96" cy="84" r="4"/>
+</svg>
