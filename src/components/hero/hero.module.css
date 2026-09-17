@@ -6,16 +6,16 @@
 }
 
 /*
- * 写真の高さ。クイックナビの帯までを1画面に収める。
+ * 写真の高さ。
  *
- * 帯を写真の外へ出したぶん、写真を 100svh のまま残すとカードが画面の下に
- * はみ出して、せっかくのクイックナビが最初の画面から消える。帯の実測値
- * （PC 252px / SP 185px = 余白 + カード）を引いた高さにする。
+ * PC は写真をファーストビュー全面に使い、クイックナビはスクロールした先に置く。
+ * 帯の分を引くと写真が横長の帯になり、情景が伝わらなかった。
+ * SP は帯の実測値（185px = 余白 + カード）を引き、クイックナビまでを1画面に収める。
  */
 .mainVisual {
-  --quick-nav-h: 252px;
   position: relative;
-  height: min(calc(100svh - var(--quick-nav-h)), 700px);
+  height: 100svh;
+  min-height: 560px;
   background: var(--c-bg2);
   overflow: hidden;
 }
@@ -317,7 +317,8 @@
 ------------------------------------------------------------------ */
 @media (max-width: 767px) {
   .mainVisual {
-    --quick-nav-h: 185px;
+    height: min(calc(100svh - 185px), 700px);
+    min-height: 0;
   }
   .img {
     transform: translateX(10px);
