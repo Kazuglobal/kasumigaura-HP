@@ -1,19 +1,33 @@
-/* C1: FlowVox reveal (y 60px -> 0, fade, 600ms easeOutCubic, stagger 300ms) */
+/*
+ * C1 リビール。「紙が下から差し込まれる」動き。
+ *
+ * フェード＋移動ではなくマスクで出すのは日本語の都合。漢字とかなで字面の
+ * 黒みが大きく違うので、フェードだと濃い字だけが先に立ち上がって見える。
+ * 断ち切りで出すほうが締まる。
+ */
 .flowVox > * {
   opacity: 0;
-  transform: translateY(60px);
+  clip-path: inset(100% 0 0 0);
+  transform: translateY(18px);
   transition:
-    transform var(--dur-reveal) var(--ease-out-cubic),
-    opacity var(--dur-reveal) var(--ease-out-cubic);
+    clip-path var(--dur-reveal) var(--ease-signature),
+    transform var(--dur-reveal) var(--ease-signature),
+    opacity calc(var(--dur-reveal) * 0.6) linear;
   will-change: transform, opacity;
 }
 
 .began > * {
   opacity: 1;
+  clip-path: inset(0 0 0 0);
   transform: translateY(0);
 }
 
+/*
+ * 出終わったら切り抜きを外す。付けたままだとカードの hover の影が
+ * 断ち切られる（clip-path は子のはみ出しを常に切る）。
+ */
 .finished > * {
+  clip-path: none;
   will-change: auto;
 }
 

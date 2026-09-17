@@ -66,8 +66,16 @@ export function Hero() {
             />
           ))}
         </div>
-        <Lineup active={state.active} onEnter={activate} onToggle={toggle} />
       </section>
+      {/*
+        クイックナビ。以前は写真の上に浮かせていたが、カードの上端が写真に、
+        下端が地の色に掛かって、どちらの要素なのか読み取れなかった。
+        写真の外に出し、直下の帯として置く。ホバーで上の写真が変わる関係は
+        そのまま（#mainVisualWrapper の中にいるので離脱の判定も効く）。
+      */}
+      <div className={styles.quickNav}>
+        <Lineup active={state.active} onEnter={activate} onToggle={toggle} />
+      </div>
     </div>
   )
 }

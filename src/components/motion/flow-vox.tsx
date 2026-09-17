@@ -6,7 +6,7 @@ import styles from './flow-vox.module.css'
 type Props = {
   children: ReactNode
   className?: string
-  /** Delay between children in ms (C1: 300ms). */
+  /** Delay between children in ms. 既定は --stagger-reveal と同じ 180ms。 */
   stagger?: number
   as?: 'div' | 'section' | 'ul' | 'li' | 'article'
 }
@@ -20,11 +20,14 @@ const rootMarginFor = (): string => {
 }
 
 /**
- * C1 reveal: children start at translateY(60px)/opacity 0 and animate to
- * rest (600ms, easeOutCubic) with a per-child stagger once the box enters
- * the viewport (bottom margin -20% portrait / -30% landscape). Runs once.
+ * C1 reveal: children are masked away (clip-path inset from the top) and slide
+ * up 18px, then are revealed bottom-up over --dur-reveal with the signature
+ * easing and a per-child stagger, once the box enters the viewport
+ * (bottom margin -20% portrait / -30% landscape). Runs once.
+ *
+ * 「紙が下から差し込まれる」— サイト全体で共有するリビールの語彙。
  */
-export function FlowVox({ children, className, stagger = 300, as = 'div' }: Props) {
+export function FlowVox({ children, className, stagger = 180, as = 'div' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

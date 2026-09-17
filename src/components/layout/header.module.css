@@ -66,17 +66,20 @@
 .navList {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 .navLink {
   position: relative;
   display: block;
   padding: 6px 0;
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: bold;
   line-height: 1.6;
   color: inherit;
   transition: color 0.3s;
+}
+.navIcon {
+  display: none;
 }
 /* E3: 7px dot */
 .navLink::after {
@@ -310,10 +313,27 @@
   }
   .navLink {
     padding: 8px 0;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     text-align: center;
     color: var(--c-primary);
     border-bottom: 1px solid var(--c-primary-l3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .navIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .navIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
   .navLink::after {
     display: none;

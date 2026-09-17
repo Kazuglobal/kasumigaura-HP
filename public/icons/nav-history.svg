@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 歴史の時計・歩み -->
+  <circle cx="60" cy="60" r="38"/>
+  <path d="M60 34v26l16 10"/>
+  <path d="M60 14v8"/>
+  <path d="M60 98v8"/>
+  <path d="M14 60h8"/>
+  <path d="M98 60h8"/>
+  <!-- 時間の回転矢印（歴史の歩み） -->
+  <path d="M26 40A46 46 0 1 1 20 64"/>
+  <path d="M18 36l8 4-4 8"/>
+</svg>

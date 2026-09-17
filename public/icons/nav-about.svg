@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 校舎・学校のシンボル -->
+  <path d="M60 20L20 44v10h80V44L60 20z"/>
+  <rect x="26" y="54" width="68" height="46" rx="4"/>
+  <!-- 時計塔/シンボル -->
+  <circle cx="60" cy="38" r="7"/>
+  <path d="M60 35v3l2 2"/>
+  <!-- 窓と玄関 -->
+  <rect x="36" y="66" width="12" height="12" rx="2"/>
+  <rect x="72" y="66" width="12" height="12" rx="2"/>
+  <path d="M52 100V84h16v16"/>
+  <path d="M16 100h88"/>
+</svg>

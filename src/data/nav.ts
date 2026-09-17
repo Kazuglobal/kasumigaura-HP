@@ -7,6 +7,7 @@ export type MegaItem = {
 export type NavItem = {
   readonly label: string
   readonly href: string
+  readonly icon?: string
   readonly mega?: readonly MegaItem[]
 }
 
@@ -22,13 +23,15 @@ export const megaMenu: readonly MegaItem[] = [
 export const megaMenuNote = '日程は [要確認]'
 
 export const navPc: readonly NavItem[] = [
-  { label: '同窓会について', href: '#about' },
-  { label: '沿革・歩み', href: '#history' },
-  { label: '年間行事', href: '#events', mega: megaMenu },
-  { label: '会報・お知らせ', href: '#news' },
-  { label: 'ギャラリー', href: '#gallery' },
-  { label: '卒業生紹介', href: '/stories' },
-  { label: '事業・店舗紹介', href: '/business' },
+  { label: '同窓会について', href: '#about', icon: '/icons/nav-about.svg' },
+  { label: '沿革・歩み', href: '#history', icon: '/icons/nav-history.svg' },
+  { label: '年間行事', href: '#events', icon: '/icons/nav-events.svg', mega: megaMenu },
+  { label: '会報・お知らせ', href: '#news', icon: '/icons/nav-news.svg' },
+  { label: 'ギャラリー', href: '#gallery', icon: '/icons/nav-gallery.svg' },
+  { label: '卒業生紹介', href: '/stories', icon: '/icons/nav-stories.svg' },
+  { label: '事業・店舗紹介', href: '/business', icon: '/icons/nav-business.svg' },
+  { label: '住所変更のお届け', href: '/address', icon: '/icons/nav-address.svg' },
+  { label: '寄付・協賛のお願い', href: '/donation', icon: '/icons/nav-donation.svg' },
 ] as const
 
 export const navLabels = {

@@ -14,7 +14,15 @@
   --ov-white: rgba(255, 255, 255, 0.8);
   --ov-head: rgba(47, 33, 11, 0.3);
   --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
-  --dur-reveal: 600ms;
+  /*
+   * signature easing。サイトの「現れる」動きはすべてこの1本で揃える。
+   * バリエーションを増やすほど散漫になるので、ここを増やさない。
+   * 例外はファーストビュー動画の紙の掃き（remotion/hero/hero.tsx を参照）だけ。
+   */
+  --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-reveal: 700ms;
+  /* 紙が1枚ずつ差し込まれる間隔。300ms は要素が並ぶと間延びして見えた。 */
+  --stagger-reveal: 180ms;
   --stagger: 300ms;
   --radius-s: 10px;
   --radius-m: 15px;

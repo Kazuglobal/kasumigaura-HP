@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import type { TransitionEvent } from 'react'
+import type { CSSProperties, TransitionEvent } from 'react'
 import { hero, type HeroCard } from '@/data/hero'
 import { WaveDivider } from '@/components/motion/wave-divider'
 import { HeroIntroVisual } from './hero-intro-visual'
@@ -17,6 +17,21 @@ function HeroImage({ src, priority = false }: { src: string; priority?: boolean 
   )
 }
 
+/**
+ * 文節ひとつ。下からのマスクリビールで出す。
+ *
+ * `--part` は文節の通し番号で、行をまたいで連番になっている。PC の1行と SP の
+ * 2行で行の割れ方は違うが、読む順は同じなので、遅れの計算は行ではなく文節で
+ * 通す。
+ */
+function CatchPart({ text, order }: { text: string; order: number }) {
+  return (
+    <span className={styles.part} style={{ '--part': order } as CSSProperties}>
+      <span className={styles.partInner}>{text}</span>
+    </span>
+  )
+}
+
 /** Always-visible intro figure with the text catch copy (A3). */
 export function HeroIntro() {
   return (
@@ -24,11 +39,25 @@ export function HeroIntro() {
       <HeroIntroVisual />
       <figcaption className={styles.mainCopy}>
         <h1 className={styles.catch}>
-          <span className={styles.catchPc}>{hero.catchCopy}</span>
-          <span className={styles.catchSp}>
-            {hero.catchCopySpLines.map((line) => (
-              <span key={line}>{line}</span>
+          <span className={styles.catchPc}>
+            {hero.catchCopyPcLine.map((text, i) => (
+              <CatchPart key={text} text={text} order={i} />
             ))}
+          </span>
+          <span className={styles.catchSp}>
+            {hero.catchCopySpLines.map((parts, line) => {
+              // 遅れは行ではなく文節の通し番号で決める。行をまたいでも読む順は続く。
+              const offset = hero.catchCopySpLines
+                .slice(0, line)
+                .reduce((n, l) => n + l.length, 0)
+              return (
+                <span key={line} className={styles.catchSpLine}>
+                  {parts.map((text, i) => (
+                    <CatchPart key={text} text={text} order={offset + i} />
+                  ))}
+                </span>
+              )
+            })}
           </span>
         </h1>
         <p className={styles.catchSub}>{hero.sub}</p>

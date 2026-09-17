@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#005099" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 会報・新聞 -->
+  <rect x="26" y="28" width="68" height="68" rx="6"/>
+  <path d="M38 42h44"/>
+  <rect x="38" y="52" width="22" height="18" rx="2"/>
+  <path d="M68 52h14"/>
+  <path d="M68 62h14"/>
+  <path d="M38 80h44"/>
+  <!-- 重なり影線 -->
+  <path d="M32 96h64a4 4 0 0 0 4-4V36"/>
+</svg>
