@@ -7,7 +7,7 @@
 # This file pins the output directory. The build command itself still comes from
 # the Pages dashboard (Settings -> Build configuration) and must be set to:
 #   Build command: pnpm build
-#   NODE_VERSION:  22
+#   NODE_VERSION:  22.23.4 (or 24.22.1+)
 name = "kasumigaura-hp"
 pages_build_output_dir = "out"
 compatibility_date = "2026-09-02"
